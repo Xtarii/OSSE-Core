@@ -12,6 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # CORE Files ( OSSE Library files )
 add_library(osse STATIC src/core.cpp
     src/URI/URI.cpp
+    src/config/Config.cpp
 )
 target_link_libraries(osse PRIVATE curl)
 

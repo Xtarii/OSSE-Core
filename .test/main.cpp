@@ -7,7 +7,7 @@
 
 int main() {
     std::string configFileName = "./.configs/default.osse";
-    Config config = OSSE::loadConfig(configFileName);
+    OSSE::Config config = OSSE::Config::load(configFileName);
 
     std::string agent = "*";
     std::string url = "https://google.com/";
