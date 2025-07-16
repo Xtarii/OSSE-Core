@@ -1,0 +1,2 @@
+# Parsing rules
+parse-robots: ^\s*(Allow|Disallow|User-agent)\s*:\s*(.+)$

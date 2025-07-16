@@ -4,7 +4,11 @@
 
 #include <curl/curl.h>
 #include <curl/easy.h>
+#include <fstream>
 #include <iostream>
+#include <regex>
+#include <sstream>
+#include <string>
 
 
 
@@ -39,4 +43,57 @@ std::string OSSE::getRobots(OSSE::URI &uri) {
     curl_easy_cleanup(curl);
     curl_global_cleanup();
     return response;
+}
+
+
+
+
+
+void OSSE::readRobots(std::string &robots, std::string agent, Config *config) {
+    std::istringstream stream(robots);
+    std::string line;
+    std::smatch match;
+
+    while(std::getline(stream, line)) {
+        if(std::regex_match(line, match, config->robots)) {
+            std::cout << "Name: "
+                << (match[1].matched ? match[1].str() : "[NONE]") << std::endl;
+            std::cout << "Value: "
+                << (match[2].matched ? match[2].str() : "[NONE]") << std::endl;
+        }
+    }
+}
+
+
+
+
+
+//
+// IS THIS GOOD ???, Well no it is not, the config format is not
+// the best and config reading is not the best.
+//
+// WHAT DOES THAT MEAN ???, Well I will update this later
+// for better configuration.
+//
+Config OSSE::loadConfig(std::string &file) {
+    Config config;
+    std::fstream stream(file.c_str());
+    if(!stream.is_open()) {
+        std::cerr << "Could not open file " << file << std::endl;
+        return config;
+    }
+
+    std::string line;
+    std::regex regex(CONFIG_REGEX, std::regex::icase);
+    std::smatch match;
+
+    while(std::getline(stream, line)) {
+        if(std::regex_match(line, match, regex)) {
+            if(match[1].str() == "parse-robots") {
+                config.robots = std::regex(match[2].str(), std::regex::icase);
+            }
+        }
+    }
+
+    return config;
 }
