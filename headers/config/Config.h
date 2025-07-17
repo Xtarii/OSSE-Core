@@ -15,6 +15,10 @@
 #define CONFIG_REGEX R"(^\s*([A-Za-z_][A-Za-z0-9_-]*)\s*:\s*(.+)$)"
 #endif // CONFIG_REGEX
 
+#ifndef CONFIG_ROBOTS_PATH
+#define CONFIG_ROBOTS_PATH "robots-path"
+#endif // CONFIG_ROBOTS_PATH
+
 
 
 namespace OSSE {
