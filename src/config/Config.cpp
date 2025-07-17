@@ -21,6 +21,7 @@ OSSE::Config OSSE::Config::load(std::string &path) {
             map[match[1].str()] = match[2].str();
     }
 
+    stream.close();
     config.settings = map;
     std::cout << "Loaded config " << path << std::endl;
     return config;
