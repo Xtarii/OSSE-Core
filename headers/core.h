@@ -4,6 +4,7 @@
 #include "URI/URI.h"
 #include "config/Config.h"
 #include <regex>
+#include <sstream>
 #include <string>
 
 
@@ -24,11 +25,7 @@
 namespace OSSE {
 
 
-
-    std::string getRobots(URI&);
-
-    void readRobots(std::string &robots, std::string agent, OSSE::Config *config);
-
+    std::string GET(URI &uri);
 
 
 }

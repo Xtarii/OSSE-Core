@@ -2,11 +2,12 @@
 
 #include "../headers/URI/URI.h"
 
+#include <algorithm>
+#include <cctype>
 #include <curl/curl.h>
 #include <curl/easy.h>
 #include <iostream>
-#include <regex>
-#include <sstream>
+#include <map>
 #include <string>
 
 
@@ -18,9 +19,7 @@ size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp) {
     return total;
 }
 
-
-
-std::string OSSE::getRobots(OSSE::URI &uri) {
+std::string OSSE::GET(OSSE::URI &uri) {
     CURL *curl;
     CURLcode res;
     std::string response;
@@ -29,7 +28,7 @@ std::string OSSE::getRobots(OSSE::URI &uri) {
     curl = curl_easy_init();
     if(!curl) return "";
 
-    curl_easy_setopt(curl, CURLOPT_URL, uri.asPath(ROBOTS).c_str());
+    curl_easy_setopt(curl, CURLOPT_URL, uri.fullURI().c_str());
 
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
@@ -42,25 +41,4 @@ std::string OSSE::getRobots(OSSE::URI &uri) {
     curl_easy_cleanup(curl);
     curl_global_cleanup();
     return response;
-}
-
-
-
-
-
-void OSSE::readRobots(std::string &robots, std::string agent, OSSE::Config *config) {
-    std::istringstream stream(robots);
-    std::string line;
-
-    std::regex regex = config->getRegexSettings("parse-robots");
-    std::smatch match;
-
-    while(std::getline(stream, line)) {
-        if(std::regex_match(line, match, regex)) {
-            std::cout << "Name: "
-                << (match[1].matched ? match[1].str() : "[NONE]") << std::endl;
-            std::cout << "Value: "
-                << (match[2].matched ? match[2].str() : "[NONE]") << std::endl;
-        }
-    }
 }
