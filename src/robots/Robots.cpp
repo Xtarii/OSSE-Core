@@ -93,3 +93,11 @@ OSSE::Robots::RobotsBlock OSSE::Robots::parseBlock(std::istringstream *stream, O
 
     return block;
 }
+
+
+
+
+
+bool OSSE::Robots::operator[](std::string key) {
+    return map_[key];
+}

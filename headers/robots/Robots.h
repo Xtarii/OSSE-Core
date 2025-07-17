@@ -82,6 +82,16 @@ namespace OSSE {
              * @return Robots object
              */
             static Robots load(OSSE::URI *URI, OSSE::Config *config);
+
+
+
+            /**
+             * Gets access value of path
+             *
+             * @param key Path
+             * @return Access value
+             */
+            bool operator[](std::string key);
     };
 }
 
