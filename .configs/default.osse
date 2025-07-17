@@ -1,2 +1,14 @@
 # Parsing rules
+agent: *
 parse-robots: ^\s*(Allow|Disallow|User-agent)\s*:\s*(.+)$
+parse-end-of-robots-blocks: \s*
+
+
+#
+# Rule names.
+# Theses should be lower case
+#
+
+user-agent: user-agent
+disallow: disallow
+allow: allow
