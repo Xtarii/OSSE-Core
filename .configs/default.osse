@@ -1,14 +1,21 @@
 #
 # Robots file
 #
+
 robots-path: /robots.txt
+
+
 
 #
 # Parsing rules
 #
+
 agent: *
 parse-robots: ^\s*(Allow|Disallow|User-agent)\s*:\s*(.+)$
 parse-end-of-robots-blocks: \s*
+
+parse-uri: (?:(\w+)://)?([^/:?#]+)(?::(\d+))?([^?#]*)?(\?[^#]*)?(#.*)?
+
 
 
 #
