@@ -94,6 +94,19 @@ namespace OSSE {
             */
             static URI parse(std::string &uri, OSSE::Config *config);
 
+            /**
+             * Validates string URI
+             *
+             * This will return true if the URI is complete,
+             * that is - it has a domain. Else the status
+             * will be false.
+             *
+             * @param uri URI string
+             * @param config OSSE Configuration
+             * @return Valid URI status
+             */
+            static bool validURI(std::string &uri, OSSE::Config *config);
+
 
 
             /**

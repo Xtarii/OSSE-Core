@@ -11,17 +11,29 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # CORE Files ( OSSE Library files )
 add_library(osse STATIC src/core.cpp
+    # OSSE Components
     src/URI/URI.cpp
     src/config/Config.cpp
     src/robots/Robots.cpp
+
+    # HTML Handling
+    src/HTML/HTML.cpp
 )
-target_link_libraries(osse PRIVATE curl)
+
+find_package(LibXml2 REQUIRED)
+find_package(CURL REQUIRED)
+
+target_link_libraries(osse PRIVATE
+    CURL::libcurl
+    LibXml2::LibXml2
+)
 
 
 
 # CORE Headers
 include_directories(headers)
-target_include_directories(osse PUBLIC
+target_include_directories(osse
+    PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/headers>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/OSSE>
 )

@@ -19,7 +19,6 @@ OSSE::URI::URI(
 
 
 OSSE::URI OSSE::URI::parse(std::string &uri, OSSE::Config *config) {
-    // REGEX for <protocol ?> <host> <port ?> <path ?> <query ?> <fragment ?>
     std::regex regex = config->getRegexSettings("parse-uri");
     std::smatch match;
 
@@ -40,4 +39,17 @@ OSSE::URI OSSE::URI::parse(std::string &uri, OSSE::Config *config) {
         };
     }
     return {};
+}
+
+
+
+bool OSSE::URI::validURI(std::string &uri, OSSE::Config *config) {
+    std::regex regex = config->getRegexSettings("parse-uri");
+    std::smatch match;
+
+    if(std::regex_match(uri, match, regex)) {
+        return match[2].matched;
+    }
+
+    return false;
 }
