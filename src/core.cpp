@@ -2,13 +2,9 @@
 
 #include "../headers/URI/URI.h"
 
-#include <algorithm>
-#include <cctype>
 #include <curl/curl.h>
 #include <curl/easy.h>
 #include <iostream>
-#include <map>
-#include <string>
 
 
 
@@ -41,4 +37,19 @@ std::string OSSE::GET(OSSE::URI &uri) {
     curl_easy_cleanup(curl);
     curl_global_cleanup();
     return response;
+}
+
+
+
+
+
+std::string OSSE::replace(std::string str, std::string a, std::string b) {
+    std::string::size_type &&pos = str.find(a, size_t{});
+
+    while(pos != std::string::npos) {
+        str.replace(pos, a.length(), b);
+        pos = str.find(a, pos + b.length());
+    }
+
+    return str;
 }

@@ -28,6 +28,10 @@ namespace OSSE {
     std::string GET(URI &uri);
 
 
+
+    std::string replace(std::string str, std::string a, std::string b);
+
+
 }
 
 
