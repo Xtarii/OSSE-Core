@@ -1,6 +1,8 @@
 #ifndef OSSE_URI
 #define OSSE_URI
 
+#include "../config/Config.h"
+
 #include <sstream>
 #include <string>
 
@@ -87,9 +89,10 @@ namespace OSSE {
             * Parses URI string into URI object
             *
             * @param uri URI string reference
+            * @param config OSSE Configuration
             * @return Parsed URI object
             */
-            static URI parse(std::string &uri);
+            static URI parse(std::string &uri, OSSE::Config *config);
 
 
 
@@ -167,11 +170,36 @@ namespace OSSE {
                     << (protocol_.empty() ? "" : protocol_ + "://")
                     << host_
                     << (port_.empty() ? "" : ":" + port_)
+                    << fullPath();
+                return stream.str();
+            }
+
+
+
+            /**
+             * Constructs full URI Path string
+             *
+             * Creates a URI path string, this will
+             * not include the `protocol` nor the `domain`
+             *
+             * @return Full URI Path string
+             */
+            std::string fullPath() {
+                std::stringstream stream;
+
+                stream
                     << path_
                     << (query_.empty() ? "" : query_)
                     << (fragment_.empty() ? "" : fragment_);
                 return stream.str();
             }
+
+            /**
+             * URI Path
+             *
+             * @return Path string
+             */
+            std::string path() { return path_; }
     };
 }
 
