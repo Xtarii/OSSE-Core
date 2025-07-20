@@ -7,7 +7,7 @@
 
 OSSE::Robots OSSE::Robots::load(OSSE::URI *URI, OSSE::Config *config) {
     std::string path = URI->asPath(static_cast<OSSE::Config>(*config)[CONFIG_ROBOTS_PATH]);
-    OSSE::URI uri = OSSE::URI::parse(path);
+    OSSE::URI uri = OSSE::URI::parse(path, config);
 
     std::string content = OSSE::GET(uri);
 
@@ -100,4 +100,27 @@ OSSE::Robots::RobotsBlock OSSE::Robots::parseBlock(std::istringstream *stream, O
 
 bool OSSE::Robots::operator[](std::string key) {
     return map_[key];
+}
+
+
+
+
+
+bool OSSE::Robots::isAllowed(std::string path) {
+    std::regex regex;
+    std::smatch match;
+
+    for(auto& [key, value] : map_) {
+        std::string str = OSSE::replace(key, "*", "(.*)");
+        regex = std::regex(str, std::regex::icase);
+
+        if(std::regex_match(path, match, regex)) {
+            return value;
+        }
+    }
+    return false; // Defaults to not allow crawling
+}
+
+bool OSSE::Robots::isAllowed(OSSE::URI *URI) {
+    return isAllowed(URI->fullPath());
 }

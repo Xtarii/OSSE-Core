@@ -92,6 +92,38 @@ namespace OSSE {
              * @return Access value
              */
             bool operator[](std::string key);
+
+
+
+            /**
+             * Checks if `path` is allowed to be crawled.
+             *
+             * If the path is found in the robots file
+             * then the `return value` will be equal to the
+             * value in the robots file.
+             *
+             * If the path is not included in the robots file
+             * then the status will be `false`
+             *
+             * @param path Path
+             * @return Status of allowing crawling
+             */
+            bool isAllowed(std::string path);
+
+            /**
+             * Checks if `URI path` is allowed to crawl.
+             *
+             * If the path is found in the robots file
+             * then the `return value` will be equal to the
+             * value in the robots file.
+             *
+             * If the path is not included in the robots file
+             * then the status will be `false`
+             *
+             * @param URI URI object
+             * @return Status of allowing crawling
+             */
+            bool isAllowed(OSSE::URI *URI);
     };
 }
 
