@@ -7,3 +7,10 @@ made to integrate into any search engine.
 
 The job of the core is to map the web and provide functions
 for clients to search the internet map.
+
+
+
+### Why
+
+I want to learn C++ and Networking, maybe some search engine-ish as well.
+So to learn more I made this search engine.
