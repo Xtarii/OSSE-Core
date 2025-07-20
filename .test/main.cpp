@@ -12,7 +12,7 @@ int main() {
     std::string agent = "*";
     std::string url = "https://google.com/";
 
-    OSSE::URI URI = OSSE::URI::parse(url);
+    OSSE::URI URI = OSSE::URI::parse(url, &config);
 
     OSSE::Robots robots = OSSE::Robots::load(&URI, &config);
 
