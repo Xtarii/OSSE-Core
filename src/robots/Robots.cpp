@@ -6,7 +6,9 @@
 #include <string>
 
 OSSE::Robots OSSE::Robots::load(OSSE::URI *URI, OSSE::Config *config) {
-    std::string path = URI->asPath(static_cast<OSSE::Config>(*config)[CONFIG_ROBOTS_PATH]);
+    std::string path = URI->asPath(
+        OSSE::Config::getValue(config, ROBOTS_PATH)
+    );
     OSSE::URI uri = OSSE::URI::parse(path, config);
 
     std::string content = OSSE::GET(uri);
@@ -51,8 +53,8 @@ OSSE::Robots OSSE::Robots::parse(std::string &content, OSSE::Config *config) {
 OSSE::Robots::RobotsBlock OSSE::Robots::parseBlock(std::istringstream *stream, OSSE::Config *config) {
     RobotsBlock block;
 
-    std::regex regex = config->getRegexSettings("parse-robots");
-    std::regex end = config->getRegexSettings("parse-end-of-robots-blocks");
+    std::regex regex = OSSE::Config::getRegex(config, ROBOTS_PARSE);
+    std::regex end = OSSE::Config::getRegex(config, ROBOTS_PARSE_BLOCK_END);
 
     std::smatch match;
     std::string line;
@@ -60,10 +62,10 @@ OSSE::Robots::RobotsBlock OSSE::Robots::parseBlock(std::istringstream *stream, O
     std::vector<std::string> agents;
     std::map<std::string, bool> map;
 
-    std::string agent = static_cast<OSSE::Config>(*config)["agent"];
-    std::string userAgent = static_cast<OSSE::Config>(*config)["user-agent"];
-    std::string disallow = static_cast<OSSE::Config>(*config)["disallow"];
-    std::string allow = static_cast<OSSE::Config>(*config)["allow"];
+    std::string agent = OSSE::Config::getValue(config, AGENT);
+    std::string userAgent = OSSE::Config::getValue(config, NAME_USER_AGENT);
+    std::string disallow = OSSE::Config::getValue(config, NAME_DISALLOW);
+    std::string allow = OSSE::Config::getValue(config, NAME_ALLOW);
 
     while(std::getline(*stream, line)) {
         if(std::regex_match(line, match, regex)) {

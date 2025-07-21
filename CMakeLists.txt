@@ -13,8 +13,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library(osse STATIC src/core.cpp
     # OSSE Components
     src/URI/URI.cpp
-    src/config/Config.cpp
     src/robots/Robots.cpp
+
+    # OSSE Configuration
+    src/config/Config.cpp
+    src/config/Defaults.cpp
 
     # HTML Handling
     src/HTML/HTML.cpp

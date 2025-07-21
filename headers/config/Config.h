@@ -4,6 +4,7 @@
 #ifndef OSSE_CONFIG
 #define OSSE_CONFIG
 
+#include "Defaults.h"
 #include <map>
 #include <regex>
 #include <string>
@@ -14,10 +15,6 @@
 #ifndef CONFIG_REGEX
 #define CONFIG_REGEX R"(^\s*([A-Za-z_][A-Za-z0-9_-]*)\s*:\s*(.+)$)"
 #endif // CONFIG_REGEX
-
-#ifndef CONFIG_ROBOTS_PATH
-#define CONFIG_ROBOTS_PATH "robots-path"
-#endif // CONFIG_ROBOTS_PATH
 
 
 
@@ -48,6 +45,29 @@ namespace OSSE {
              * @return Configuration object
              */
             static Config load(std::string &path);
+
+            /**
+             * Gets configuration settings value
+             *
+             * @param config Configuration
+             * @param settings Settings Object
+             * @return Settings value
+             */
+            static std::string getValue(Config* config, const OSSE_CONFIG_TYPE &settings);
+
+            /**
+             * Gets configuration regex object
+             *
+             * @param config Configuration
+             * @param settings Settings Object
+             * @param flag Regex flag
+             * @return Regex
+             */
+            static std::regex getRegex(
+                Config* config,
+                const OSSE_CONFIG_TYPE &settings,
+                std::regex_constants::syntax_option_type flag = std::regex::icase
+            );
 
 
 

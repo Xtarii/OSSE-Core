@@ -51,3 +51,23 @@ std::regex OSSE::Config::getRegexSettings(
 std::regex OSSE::Config::getRegexSettings(std::string setting) {
     return getRegexSettings(setting, std::regex::icase);
 }
+
+
+
+
+
+std::string OSSE::Config::getValue(Config *config, const OSSE_CONFIG_TYPE &settings) {
+    if(config == nullptr) return settings.value;
+
+    std::string value = ((Config)*config)[settings.name];
+    if(value.empty()) return settings.value;
+    return value;
+}
+
+std::regex OSSE::Config::getRegex(
+    Config *config,
+    const OSSE_CONFIG_TYPE &settings,
+    std::regex_constants::syntax_option_type flag
+) {
+    return std::regex(getValue(config, settings), flag);
+}
