@@ -15,6 +15,9 @@ add_library(osse STATIC src/core.cpp
     src/URI/URI.cpp
     src/robots/Robots.cpp
 
+    # Algorithms
+    src/algorithm/Algorithm.cpp
+
     # OSSE Configuration
     src/config/Config.cpp
     src/config/Defaults.cpp
