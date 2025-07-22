@@ -2,8 +2,9 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
 
-OSSE::Config OSSE::Config::load(std::string &path) {
+OSSE::Config OSSE::Config::load(std::string path) {
     Config config;
     std::map<std::string, std::string> map;
 
@@ -23,6 +24,25 @@ OSSE::Config OSSE::Config::load(std::string &path) {
 
     stream.close();
     config.settings = map;
+    std::cout << "Loaded config " << path << std::endl;
+    return config;
+}
+
+CONFIG_LIST OSSE::Config::loadConfigList(std::string path) {
+    CONFIG_LIST config;
+
+    std::fstream stream(path.c_str());
+    if(!stream.is_open()) {
+        std::cerr << "Could not open file " << path << std::endl;
+        return config;
+    }
+
+    std::string line;
+    while(std::getline(stream, line)) if(!line.empty()) {
+        config.push_back(line);
+    }
+
+    stream.close();
     std::cout << "Loaded config " << path << std::endl;
     return config;
 }

@@ -8,6 +8,7 @@
 #include <map>
 #include <regex>
 #include <string>
+#include <vector>
 
 
 
@@ -15,6 +16,16 @@
 #ifndef CONFIG_REGEX
 #define CONFIG_REGEX R"(^\s*([A-Za-z_][A-Za-z0-9_-]*)\s*:\s*(.+)$)"
 #endif // CONFIG_REGEX
+
+
+
+/**
+ * Configuration List
+ *
+ * A list of config options stored as
+ * an array instead of a map.
+ */
+typedef std::vector<std::string> CONFIG_LIST;
 
 
 
@@ -44,7 +55,18 @@ namespace OSSE {
              * @param path File path
              * @return Configuration object
              */
-            static Config load(std::string &path);
+            static Config load(std::string path);
+
+            /**
+             * Loads configuration list
+             *
+             * Loads a ```.list``` file, example ```tags.list```
+             * containing an array of configuration options.
+             *
+             * @param path File path
+             * @return Configuration list object
+             */
+            static CONFIG_LIST loadConfigList(std::string path);
 
             /**
              * Gets configuration settings value
