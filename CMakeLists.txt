@@ -14,6 +14,11 @@ add_library(osse STATIC src/core.cpp
     # OSSE Components
     src/URI/URI.cpp
     src/robots/Robots.cpp
+    src/queue/Queue.cpp
+
+    # Crawlers
+    src/crawler/Manager.cpp
+    src/crawler/worker/Worker.cpp
 
     # Algorithms
     src/algorithm/Algorithm.cpp
