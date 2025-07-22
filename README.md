@@ -15,9 +15,13 @@ for clients to search the internet map.
 I want to learn C++ and Networking, maybe some search engine-ish as well.
 So to learn more I made this search engine.
 
+And yes, I know that there are some things that can be improved and made better.
 
 
-### How to use
+
+
+
+# How to use
 
 **OSSE** uses configuration files to customize the engine.
 It is possible to use it without configuration files.
@@ -47,3 +51,15 @@ uses the variable name as the configuration name.
 ```const OSSE_CONFIG_TYPE AGENT {"AGENT", "*"};```
 where the variable is named ```AGENT``` and when searching in configuration files
 it will be referred to as ```AGENT```
+
+
+
+### Crawlers
+
+Crawlers take a list [ `CONFIG_LIST` ] containing tags used for analyzing websites.
+There is no default `Tags.list` file or defaults for tags in the core. **Tags** must
+be provided to the search engine for the analyzing to work.
+
+There is also a need to provide a list of **default-URI**. A list of URLs used
+by the search engine's crawlers when starting to provide a base of known websites.
+If this list is not provided the search engines crawlers is basically on a nice spa day.
