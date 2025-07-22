@@ -70,10 +70,7 @@ OSSE::Robots::RobotsBlock OSSE::Robots::parseBlock(std::istringstream *stream, O
     while(std::getline(*stream, line)) {
         if(std::regex_match(line, match, regex)) {
             std::string key = match[1].str();
-            std::transform( // Makes key to lower case, value is not needed
-                key.begin(), key.end(), key.begin(),
-                [](unsigned char c) { return std::tolower(c); }
-            );
+            key = OSSE::toLower(key);
 
             if(key == userAgent) agents.push_back(match[2].str());
             else if(key == disallow) map[match[2].str()] = false;
