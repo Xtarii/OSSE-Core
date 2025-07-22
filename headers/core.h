@@ -31,6 +31,8 @@ namespace OSSE {
 
     std::string replace(std::string str, std::string a, std::string b);
 
+    std::string toLower(std::string str);
+
 
 }
 

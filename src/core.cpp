@@ -2,6 +2,7 @@
 
 #include "../headers/URI/URI.h"
 
+#include <cctype>
 #include <curl/curl.h>
 #include <curl/easy.h>
 #include <iostream>
@@ -51,5 +52,14 @@ std::string OSSE::replace(std::string str, std::string a, std::string b) {
         pos = str.find(a, pos + b.length());
     }
 
+    return str;
+}
+
+std::string OSSE::toLower(std::string str) {
+    std::transform(
+        str.begin(), str.end(),
+        str.begin(),
+        [](unsigned char c){ return std::tolower(c); }
+    );
     return str;
 }
