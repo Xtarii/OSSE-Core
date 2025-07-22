@@ -92,7 +92,7 @@ namespace OSSE {
             * @param config OSSE Configuration
             * @return Parsed URI object
             */
-            static URI parse(std::string &uri, OSSE::Config *config);
+            static URI parse(std::string uri, OSSE::Config *config);
 
             /**
              * Validates string URI

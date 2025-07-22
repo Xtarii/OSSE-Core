@@ -18,7 +18,7 @@ OSSE::URI::URI(
 
 
 
-OSSE::URI OSSE::URI::parse(std::string &uri, OSSE::Config *config) {
+OSSE::URI OSSE::URI::parse(std::string uri, OSSE::Config *config) {
     std::regex regex = OSSE::Config::getRegex(config, URI_PARSE);
     std::smatch match;
 
