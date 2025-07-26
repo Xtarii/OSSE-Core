@@ -20,7 +20,7 @@ OSSE::Manager::~Manager() {
 
 
 void OSSE::Manager::push(OSSE::URI URI) {
-    OSSE::Robots robots = OSSE::Robots::load(&URI, config_);
+    OSSE::Robots* robots = OSSE::Robots::load(&URI, config_);
     push(new QueueObject(URI, robots));
 }
 

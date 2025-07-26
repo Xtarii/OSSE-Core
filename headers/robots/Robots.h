@@ -5,6 +5,7 @@
 #include "../config/Config.h"
 
 #include <map>
+#include <mutex>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -50,6 +51,15 @@ namespace OSSE {
              */
             std::map<std::string, bool> map_;
 
+            /**
+             * Mutex for thread safe robots handling
+             */
+            std::mutex mutex_;
+            /**
+             * Amount of handlers connected to this robots file
+             */
+            int handlers_;
+
 
 
             /**
@@ -59,7 +69,7 @@ namespace OSSE {
              * @param config OSSE Configuration
              * @return Robots object
              */
-            static Robots parse(std::string &content, OSSE::Config *config);
+            static Robots* parse(std::string &content, OSSE::Config *config);
 
             /**
              * Parse Robots Rule Block
@@ -81,7 +91,20 @@ namespace OSSE {
              * @param config OSSE Configuration
              * @return Robots object
              */
-            static Robots load(OSSE::URI *URI, OSSE::Config *config);
+            static Robots* load(OSSE::URI *URI, OSSE::Config *config);
+
+            /**
+             * Registers handler to Robots file
+             *
+             * @param robots Robots file
+             */
+            static void subscribe(Robots *robots);
+            /**
+             * Unregisters handler from robots file
+             *
+             * @param robots Robots file
+             */
+            static void unsubscribe(Robots *robots);
 
 
 

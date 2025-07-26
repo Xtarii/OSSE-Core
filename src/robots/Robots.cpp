@@ -2,12 +2,15 @@
 
 #include "../../headers/core.h"
 
+#include <mutex>
 #include <sstream>
 #include <string>
 
-OSSE::Robots OSSE::Robots::load(OSSE::URI *URI, OSSE::Config *config) {
+using namespace OSSE;
+
+Robots* Robots::load(URI *URI, Config *config) {
     std::string path = URI->asPath(
-        OSSE::Config::getValue(config, ROBOTS_PATH)
+        Config::getValue(config, ROBOTS_PATH)
     );
     OSSE::URI uri = OSSE::URI::parse(path, config);
 
@@ -18,8 +21,8 @@ OSSE::Robots OSSE::Robots::load(OSSE::URI *URI, OSSE::Config *config) {
 
 
 
-OSSE::Robots OSSE::Robots::parse(std::string &content, OSSE::Config *config) {
-    Robots robots;
+Robots* Robots::parse(std::string &content, Config *config) {
+    Robots* robots = new Robots();
 
     std::istringstream stream(content);
     std::string line;
@@ -27,21 +30,21 @@ OSSE::Robots OSSE::Robots::parse(std::string &content, OSSE::Config *config) {
 
     block = parseBlock(&stream, config);
     if(!block.agents.empty()) {
-        robots.agents_.insert(
-            robots.agents_.end(),
+        robots->agents_.insert(
+            robots->agents_.end(),
             block.agents.begin(), block.agents.end()
         );
-        robots.map_.insert(block.map.begin(), block.map.end());
+        robots->map_.insert(block.map.begin(), block.map.end());
     }
 
     while(std::getline(stream, line)) {
         block = parseBlock(&stream, config);
         if(!block.agents.empty()) {
-            robots.agents_.insert(
-                robots.agents_.end(),
+            robots->agents_.insert(
+                robots->agents_.end(),
                 block.agents.begin(), block.agents.end()
             );
-            robots.map_.insert(block.map.begin(), block.map.end());
+            robots->map_.insert(block.map.begin(), block.map.end());
         }
     }
 
@@ -50,11 +53,11 @@ OSSE::Robots OSSE::Robots::parse(std::string &content, OSSE::Config *config) {
 
 
 
-OSSE::Robots::RobotsBlock OSSE::Robots::parseBlock(std::istringstream *stream, OSSE::Config *config) {
+Robots::RobotsBlock Robots::parseBlock(std::istringstream *stream, Config *config) {
     RobotsBlock block;
 
-    std::regex regex = OSSE::Config::getRegex(config, ROBOTS_PARSE);
-    std::regex end = OSSE::Config::getRegex(config, ROBOTS_PARSE_BLOCK_END);
+    std::regex regex = Config::getRegex(config, ROBOTS_PARSE);
+    std::regex end = Config::getRegex(config, ROBOTS_PARSE_BLOCK_END);
 
     std::smatch match;
     std::string line;
@@ -62,10 +65,10 @@ OSSE::Robots::RobotsBlock OSSE::Robots::parseBlock(std::istringstream *stream, O
     std::vector<std::string> agents;
     std::map<std::string, bool> map;
 
-    std::string agent = OSSE::Config::getValue(config, AGENT);
-    std::string userAgent = OSSE::Config::getValue(config, NAME_USER_AGENT);
-    std::string disallow = OSSE::Config::getValue(config, NAME_DISALLOW);
-    std::string allow = OSSE::Config::getValue(config, NAME_ALLOW);
+    std::string agent = Config::getValue(config, AGENT);
+    std::string userAgent = Config::getValue(config, NAME_USER_AGENT);
+    std::string disallow = Config::getValue(config, NAME_DISALLOW);
+    std::string allow = Config::getValue(config, NAME_ALLOW);
 
     while(std::getline(*stream, line)) {
         if(std::regex_match(line, match, regex)) {
@@ -97,7 +100,7 @@ OSSE::Robots::RobotsBlock OSSE::Robots::parseBlock(std::istringstream *stream, O
 
 
 
-bool OSSE::Robots::operator[](std::string key) {
+bool Robots::operator[](std::string key) {
     return map_[key];
 }
 
@@ -105,7 +108,7 @@ bool OSSE::Robots::operator[](std::string key) {
 
 
 
-bool OSSE::Robots::isAllowed(std::string path) {
+bool Robots::isAllowed(std::string path) {
     std::regex regex;
     std::smatch match;
 
@@ -120,6 +123,21 @@ bool OSSE::Robots::isAllowed(std::string path) {
     return false; // Defaults to not allow crawling
 }
 
-bool OSSE::Robots::isAllowed(OSSE::URI *URI) {
+bool Robots::isAllowed(URI *URI) {
     return isAllowed(URI->fullPath());
+}
+
+
+
+
+
+void Robots::subscribe(Robots *robots) {
+    std::unique_lock<std::mutex> lock(robots->mutex_);
+    robots->handlers_++;
+}
+
+void Robots::unsubscribe(Robots *robots) {
+    std::unique_lock<std::mutex> lock(robots->mutex_);
+    robots->handlers_--;
+    if(robots->handlers_ <= 0) delete robots;
 }

@@ -29,10 +29,9 @@ int main() {
     OSSE::Worker worker(&manager);
 
 
-    OSSE::Robots robots = OSSE::Robots::load(&URI, nullptr);
+    OSSE::Robots* robots = OSSE::Robots::load(&URI, nullptr);
     OSSE::Manager::QueueObject obj(URI, robots);
     worker.run(&obj);
-
 
 
     return 0;

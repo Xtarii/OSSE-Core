@@ -16,7 +16,7 @@ namespace OSSE {
             /// URI Object
             OSSE::URI URI;
             /// Robots Object
-            OSSE::Robots Robots;
+            OSSE::Robots* Robots;
 
             /**
              * Construct a new Queue object
@@ -24,7 +24,13 @@ namespace OSSE {
              * @param uri URI object
              * @param robots Robots object
              */
-            QueueObject(OSSE::URI uri, OSSE::Robots robots) : URI(uri), Robots(robots) {}
+            QueueObject(OSSE::URI uri, OSSE::Robots* robots) : URI(uri), Robots(robots) {
+                OSSE::Robots::subscribe(this->Robots);
+            }
+
+            ~QueueObject() {
+                OSSE::Robots::unsubscribe(this->Robots);
+            }
         };
 
 

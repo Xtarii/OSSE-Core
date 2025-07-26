@@ -5,22 +5,24 @@
 
 #include <string>
 
-OSSE::Worker::Worker(OSSE::Manager *manager) {
+using namespace OSSE;
+
+Worker::Worker(Manager *manager) {
     manager_ = manager;
 }
 
 
 
-void OSSE::Worker::run(OSSE::Manager::QueueObject *object) {
+void Worker::run(Manager::QueueObject *object) {
     std::string res = OSSE::GET(object->URI);
-    OSSE::HTML::Document document(res);
+    HTML::Document document(res);
 
     for(std::string link : document.links()) {
-        if(OSSE::URI::validURI(link, manager_->config())) {
-            manager_->push(OSSE::URI::parse(link, manager_->config()));
-        }else {
-            manager_->push(new OSSE::Manager::QueueObject(
-                OSSE::URI::parse(object->URI.asPath(link), nullptr),
+        if(URI::validURI(link, manager_->config())) {
+            manager_->push(URI::parse(link, manager_->config()));
+        }else if(object->Robots->isAllowed(link)) {
+            manager_->push(new Manager::QueueObject(
+                URI::parse(object->URI.asPath(link), nullptr),
                 object->Robots
             ));
         }
