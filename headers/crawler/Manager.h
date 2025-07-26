@@ -5,8 +5,11 @@
 #include "../queue/Queue.h"
 #include "../URI/URI.h"
 #include "../robots/Robots.h"
+#include <vector>
 
 namespace OSSE {
+    struct Worker;
+
     /**
      * Manager for managing Crawlers
      */
@@ -51,6 +54,11 @@ namespace OSSE {
              * A queue of the `URI's` to scan
              */
             OSSE::Queue<QueueObject*> queue_;
+
+            /**
+             * List of workers that this manager manages
+             */
+            std::vector<Worker*> workers_;
 
 
 

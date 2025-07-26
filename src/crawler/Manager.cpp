@@ -1,30 +1,48 @@
 #include "../../headers/crawler/Manager.h"
+#include "../../headers/crawler/worker/Worker.h"
+#include <chrono>
+#include <iostream>
 
-OSSE::Manager::Manager(CONFIG_LIST tags, std::string config)
-    : OSSE::Manager(tags, new OSSE::Config(OSSE::Config::load(config))) {}
+using namespace OSSE;
 
-OSSE::Manager::Manager(CONFIG_LIST tags, OSSE::Config *config) {
+Manager::Manager(CONFIG_LIST tags, std::string config)
+    : Manager(tags, new Config(Config::load(config))) {}
+
+Manager::Manager(CONFIG_LIST tags, Config *config) {
     config_ = config;
     tags_ = tags;
 }
 
 
 
-OSSE::Manager::~Manager() {
+Manager::~Manager() {
+    std::cout << "\nRemoves manager..." << std::endl;
+    std::chrono::time_point start = std::chrono::steady_clock::now();
+
     delete config_;
     while(!queue_.empty()) delete queue_.pop();
+    while(!workers_.empty()) {
+        OSSE::Worker* worker = workers_.back();
+        workers_.pop_back();
+        delete worker;
+    }
+
+    std::chrono::time_point end = std::chrono::steady_clock::now();
+    double delta = std::chrono::duration_cast<std::chrono::milliseconds>(
+        end - start).count();
+    std::cout << "Deleted manager in " << delta << "ms\n" << std::endl;
 }
 
 
 
 
 
-void OSSE::Manager::push(OSSE::URI URI) {
-    OSSE::Robots* robots = OSSE::Robots::load(&URI, config_);
+void Manager::push(URI URI) {
+    Robots* robots = Robots::load(&URI, config_);
     push(new QueueObject(URI, robots));
 }
 
-void OSSE::Manager::push(OSSE::Manager::QueueObject *object) {
+void Manager::push(Manager::QueueObject *object) {
     queue_.push(object);
 }
 
@@ -32,10 +50,10 @@ void OSSE::Manager::push(OSSE::Manager::QueueObject *object) {
 
 
 
-OSSE::Config* OSSE::Manager::config() const {
+Config* Manager::config() const {
     return config_;
 }
 
-CONFIG_LIST& OSSE::Manager::tags() {
+CONFIG_LIST& Manager::tags() {
     return tags_;
 }
