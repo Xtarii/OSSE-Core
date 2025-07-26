@@ -29,7 +29,7 @@ It is possible to use it without configuration files.
 
 // Instead of a configuration object, a **nullptr** is passed as parameter.
 
-OSSE::Robots robots = OSSE::Robots::load(&URI, nullptr);
+OSSE::Robots* robots = OSSE::Robots::load(&URI, nullptr);
 ```
 
 
