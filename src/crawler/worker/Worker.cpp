@@ -2,7 +2,9 @@
 
 #include "../../../headers/core.h"
 #include "../../../headers/HTML/HTML.h"
+#include "../../../headers/algorithm/Algorithm.h"
 
+#include <set>
 #include <string>
 
 using namespace OSSE;
@@ -31,6 +33,10 @@ void Worker::run(Manager::QueueObject *object) {
 
 
     // Analyzes document for tags
+    std::set<std::string> tags = Algorithm::analyzeDocument(
+        &document,
+        manager_->tags()
+    );
 
     // Adds document to SQL Database
 }
