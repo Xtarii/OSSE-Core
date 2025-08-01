@@ -2,6 +2,7 @@
 #include "../../headers/crawler/worker/Worker.h"
 #include <chrono>
 #include <iostream>
+#include <thread>
 
 using namespace OSSE;
 
@@ -49,6 +50,35 @@ void Manager::push(URI URI) {
 
 void Manager::push(Manager::QueueObject *object) {
     queue_.push(object);
+}
+
+
+
+void Manager::createWorkers(int amount) {
+    while(!workers_.empty()) {
+        OSSE::Worker* worker = workers_.back();
+        workers_.pop_back();
+        delete worker;
+    }
+
+    for(int x = 0; x < amount; x++)
+        workers_.push_back(new OSSE::Worker(this));
+}
+
+void Manager::run() {
+    std::vector<std::thread> threads;
+    for(OSSE::Worker* worker : workers_) {
+        std::thread thread([this, worker](){
+            QueueObject* obj = this->queue_.pop();
+            worker->run(obj);
+            delete obj;
+        });
+        threads.push_back(thread);
+    }
+
+    for(std::thread &thread : threads) if(thread.joinable()) {
+        thread.join();
+    }
 }
 
 

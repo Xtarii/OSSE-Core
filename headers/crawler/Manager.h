@@ -87,6 +87,25 @@ namespace OSSE {
 
 
             /**
+             * Creates workers
+             *
+             * Each worker will work in a
+             * separate thread.
+             *
+             * This will reset the workers list.
+             *
+             * @param amount Amount of workers to create
+             */
+            void createWorkers(int amount);
+
+            /**
+             * Runs all workers in the manager
+             */
+            void run();
+
+
+
+            /**
              * Pushes `URI` into `URI Queue`
              *
              * @param URI URI object
