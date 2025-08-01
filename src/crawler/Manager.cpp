@@ -68,12 +68,11 @@ void Manager::createWorkers(int amount) {
 void Manager::run() {
     std::vector<std::thread> threads;
     for(OSSE::Worker* worker : workers_) {
-        std::thread thread([this, worker](){
+        threads.emplace_back([this, worker](){
             QueueObject* obj = this->queue_.pop();
             worker->run(obj);
             delete obj;
         });
-        threads.push_back(thread);
     }
 
     for(std::thread &thread : threads) if(thread.joinable()) {
