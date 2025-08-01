@@ -4,7 +4,7 @@
 using namespace OSSE;
 
 Database::~Database() {
-    std::cout << "Cleanup of database manager..." << std::endl;
+    std::cout << "\t- Cleanup of database manager" << std::endl;
     while(!database_p.empty()) {
         object* obj = database_p.back();
         database_p.pop_back();

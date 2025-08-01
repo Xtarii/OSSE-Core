@@ -43,6 +43,7 @@ namespace OSSE {
              */
             T pop() {
                 std::unique_lock<std::mutex> lock(mutex_);
+                if(queue_.empty()) return nullptr;
                 T obj = queue_.front();
                 queue_.pop();
                 return obj;

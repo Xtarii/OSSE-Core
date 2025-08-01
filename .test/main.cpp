@@ -1,8 +1,8 @@
 #include "../headers/crawler/Manager.h"
-#include "../headers/crawler/worker/Worker.h"
-#include "../headers/algorithm/Algorithm.h"
+// #include "../headers/crawler/worker/Worker.h"
+// #include "../headers/algorithm/Algorithm.h"
 #include <iostream>
-#include <set>
+// #include <set>
 #include <string>
 
 
@@ -30,23 +30,32 @@ int main() {
     manager.push(URI);
 
     manager.createWorkers(5);
+    manager.run();
 
 
-    OSSE::Worker worker(&manager);
-
-
-    OSSE::Robots* robots = OSSE::Robots::load(&URI, nullptr);
-    OSSE::Manager::QueueObject obj(URI, robots);
-    worker.run(&obj);
-
-
-    std::set<std::string> tags = OSSE::Algorithm::analyzeText(
-        "google", config
-    );
-    std::set<OSSE::Database::object*> pages = manager.database()->get(tags);
-    for(OSSE::Database::object* page : pages) {
-        std::cout << "Found: " << page->title << ", at " << page->URI.fullURI() << std::endl;
+    std::cout << "Q to quit search" << std::endl;
+    while(true) {
+        std::string x;
+        std::cin >> x;
+        if(x.compare("q") == 0) break;
     }
+
+
+    // OSSE::Worker worker(&manager);
+
+
+    // OSSE::Robots* robots = OSSE::Robots::load(&URI, nullptr);
+    // OSSE::Manager::QueueObject obj(URI, robots);
+    // worker.run(&obj);
+
+
+    // std::set<std::string> tags = OSSE::Algorithm::analyzeText(
+    //     "google", config
+    // );
+    // std::set<OSSE::Database::object*> pages = manager.database()->get(tags);
+    // for(OSSE::Database::object* page : pages) {
+    //     std::cout << "Found: " << page->title << ", at " << page->URI.fullURI() << std::endl;
+    // }
 
 
     return 0;
