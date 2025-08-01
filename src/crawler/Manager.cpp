@@ -67,7 +67,7 @@ void Manager::createWorkers(int amount) {
 
 void Manager::run() {
     std::vector<std::thread> threads;
-    for(OSSE::Worker* worker : workers_) {
+    for(OSSE::Worker* worker : workers_) if(!queue_.empty()) {
         threads.emplace_back([this, worker](){
             QueueObject* obj = this->queue_.pop();
             worker->run(obj);

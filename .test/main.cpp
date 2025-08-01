@@ -29,6 +29,8 @@ int main() {
     OSSE::Manager manager(config, nullptr);
     manager.push(URI);
 
+    manager.createWorkers(5);
+
 
     OSSE::Worker worker(&manager);
 
