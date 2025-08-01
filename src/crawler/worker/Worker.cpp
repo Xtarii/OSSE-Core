@@ -39,4 +39,11 @@ void Worker::run(Manager::QueueObject *object) {
     );
 
     // Adds document to SQL Database
+    Database::object obj{
+        object->URI,
+        document.title(),
+        "document.meta()",
+        tags
+    };
+    manager_->database()->add(new Database::object(obj));
 }

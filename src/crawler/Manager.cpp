@@ -11,6 +11,8 @@ Manager::Manager(CONFIG_LIST tags, std::string config)
 Manager::Manager(CONFIG_LIST tags, Config *config) {
     config_ = config;
     tags_ = tags;
+
+    database_ = new Database();
 }
 
 
@@ -19,6 +21,7 @@ Manager::~Manager() {
     std::cout << "\nRemoves manager..." << std::endl;
     std::chrono::time_point start = std::chrono::steady_clock::now();
 
+
     delete config_;
     while(!queue_.empty()) delete queue_.pop();
     while(!workers_.empty()) {
@@ -26,6 +29,8 @@ Manager::~Manager() {
         workers_.pop_back();
         delete worker;
     }
+    delete database_;
+
 
     std::chrono::time_point end = std::chrono::steady_clock::now();
     double delta = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -52,6 +57,10 @@ void Manager::push(Manager::QueueObject *object) {
 
 Config* Manager::config() const {
     return config_;
+}
+
+Database* Manager::database() {
+    return database_;
 }
 
 CONFIG_LIST& Manager::tags() {

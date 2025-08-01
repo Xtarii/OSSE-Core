@@ -5,6 +5,7 @@
 #include "../queue/Queue.h"
 #include "../URI/URI.h"
 #include "../robots/Robots.h"
+#include "../database/Database.h"
 #include <vector>
 
 namespace OSSE {
@@ -60,6 +61,11 @@ namespace OSSE {
              */
             std::vector<Worker*> workers_;
 
+            /**
+             * Database
+             */
+            OSSE::Database* database_;
+
 
 
         public:
@@ -102,6 +108,13 @@ namespace OSSE {
              * @return Config object
              */
             OSSE::Config* config() const;
+
+            /**
+             * Gets Manager Database Manager
+             *
+             * @return Database Manager
+             */
+            OSSE::Database* database();
 
             /**
              * Gets Manager tags list

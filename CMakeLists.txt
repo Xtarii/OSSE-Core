@@ -15,6 +15,7 @@ add_library(osse STATIC src/core.cpp
     src/URI/URI.cpp
     src/robots/Robots.cpp
     src/queue/Queue.cpp
+    src/database/Database.cpp
 
     # Crawlers
     src/crawler/Manager.cpp
