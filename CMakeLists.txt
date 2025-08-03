@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 # CORE Files ( OSSE Library files )
-add_library(osse STATIC src/core.cpp
+add_library(osse SHARED src/core.cpp
     # OSSE Components
     src/URI/URI.cpp
     src/robots/Robots.cpp

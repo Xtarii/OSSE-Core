@@ -10,4 +10,5 @@ OSSEConfig.cmake
 OSSEConfigVersion.cmake
 
 libosse.a
+libosse.so
 test
