@@ -44,9 +44,8 @@ target_link_libraries(osse PRIVATE
 
 # Gets CMAKE installation path
 include(GNUInstallDirs)
-if(NOT DEFINED CMAKE_INSTALL_INCLUDEDIR OR CMAKE_INSTALL_INCLUDEDIR STREQUAL "")
-    set(CMAKE_INSTALL_INCLUDEDIR "include" CACHE PATH "Include directory")
-endif()
+
+message(STATUS "CMAKE_INSTALL_INCLUDEDIR set to ${CMAKE_INSTALL_INCLUDEDIR}")
 
 
 
