@@ -27,7 +27,7 @@ There are multiple ways to install the **OSSE Core** library.
 
 **Installation on Arch Linux**
 ```bash
-yay -Ss osse-core
+yay -S osse-core
 ```
 
 **Installation from github**
