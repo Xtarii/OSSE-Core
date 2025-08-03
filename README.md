@@ -21,6 +21,40 @@ And yes, I know that there are some things that can be improved and made better.
 
 
 
+# Installation
+
+There are multiple ways to install the **OSSE Core** library.
+
+**Installation on Arch Linux**
+```bash
+yay -Ss osse-core
+```
+
+**Installation from github**
+```bash
+git clone https://github.com/Xtarii/OSSE-Core
+cd OSSE-Core
+
+mkdir build
+cd build
+
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make
+
+sudo make install
+```
+
+**Import with CMAKE to project**
+```bash
+find_package(OSSE)
+...
+target_link_libraries(<target> OSSE::osse)
+```
+
+
+
+
+
 # How to use
 
 **OSSE** uses configuration files to customize the engine.
