@@ -42,9 +42,15 @@ target_link_libraries(osse PRIVATE
 
 
 
-# CORE Headers
+# Gets CMAKE installation path
 include(GNUInstallDirs)
+if(NOT DEFINED CMAKE_INSTALL_INCLUDEDIR OR CMAKE_INSTALL_INCLUDEDIR STREQUAL "")
+set(CMAKE_INSTALL_INCLUDEDIR "include" CACHE PATH "Include directory")
+endif()
 
+
+
+# CORE Headers
 include_directories(headers)
 target_include_directories(osse
     PUBLIC
