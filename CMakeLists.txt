@@ -45,16 +45,12 @@ target_link_libraries(osse PRIVATE
 # Gets CMAKE installation path
 include(GNUInstallDirs)
 
-message(STATUS "CMAKE_INSTALL_INCLUDEDIR set to ${CMAKE_INSTALL_INCLUDEDIR}")
-
-
-
 # CORE Headers
 include_directories(headers)
 target_include_directories(osse
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/headers>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/OSSE>
+    $<INSTALL_INTERFACE:include/OSSE>
 )
 
 # Installation Support
