@@ -43,6 +43,8 @@ target_link_libraries(osse PRIVATE
 
 
 # CORE Headers
+include(GNUInstallDirs)
+
 include_directories(headers)
 target_include_directories(osse
     PUBLIC
@@ -50,11 +52,7 @@ target_include_directories(osse
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/OSSE>
 )
 
-
-
-# Github Installation Support
-include(GNUInstallDirs)
-
+# Installation Support
 install(TARGETS osse
     EXPORT OSSETargets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
