@@ -47,7 +47,7 @@ namespace OSSE {
             /**
              * List of tags
              */
-            CONFIG_LIST tags_;
+            OSSE::string_list tags_;
 
             /**
              * URI Queue
@@ -64,7 +64,7 @@ namespace OSSE {
             /**
              * Database
              */
-            OSSE::Database* database_;
+            OSSE::abstract_database* database_;
 
 
 
@@ -128,12 +128,23 @@ namespace OSSE {
              */
             OSSE::Config* config() const;
 
+
+
+            /**
+             * Set the Database object
+             *
+             * @param database Database object
+             */
+            void setDatabase(abstract_database* database) { database_ = database; }
+
             /**
              * Gets Manager Database Manager
              *
              * @return Database Manager
              */
-            OSSE::Database* database();
+            OSSE::abstract_database* database();
+
+
 
             /**
              * Gets Manager tags list

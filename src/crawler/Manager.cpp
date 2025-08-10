@@ -1,5 +1,8 @@
 #include "../../headers/crawler/Manager.h"
+
 #include "../../headers/crawler/worker/Worker.h"
+#include "../../headers/error/Error.h"
+
 #include <chrono>
 #include <iostream>
 #include <thread>
@@ -13,7 +16,7 @@ Manager::Manager(CONFIG_LIST tags, Config *config) {
     config_ = config;
     tags_ = tags;
 
-    database_ = new Database();
+    database_ = nullptr;
 }
 
 
@@ -66,6 +69,8 @@ void Manager::createWorkers(int amount) {
 }
 
 void Manager::run() {
+    if(database_ == nullptr) throw exception("MANAGER_RUN() No Database");
+
     std::vector<std::thread> threads;
     for(OSSE::Worker* worker : workers_) {
         threads.emplace_back([this, worker](){
@@ -88,7 +93,7 @@ Config* Manager::config() const {
     return config_;
 }
 
-Database* Manager::database() {
+abstract_database* Manager::database() {
     return database_;
 }
 
