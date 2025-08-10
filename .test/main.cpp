@@ -13,7 +13,7 @@ int main() {
     CONFIG_LIST config = OSSE::Config::loadConfigList("./.config/tags.list");
 
     OSSE::Manager manager(config, nullptr);
-    manager.setDatabase(new OSSE::database());
+    manager.setDatabase(new OSSE::simple_database());
     manager.push(URI);
 
     manager.createWorkers(5);
