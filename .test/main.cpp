@@ -13,6 +13,7 @@ int main() {
     CONFIG_LIST config = OSSE::Config::loadConfigList("./.config/tags.list");
 
     OSSE::Manager manager(config, nullptr);
+    manager.setDatabase(new OSSE::database());
     manager.push(URI);
 
     manager.createWorkers(5);
@@ -29,9 +30,9 @@ int main() {
         }
 
         manager.run();
-        std::set<std::string> tags = OSSE::Algorithm::analyzeText(x, config);
-        std::set<OSSE::Database::object*> result = manager.database()->get(tags);
-        for(OSSE::Database::object* page : result) {
+        OSSE::string_set tags = OSSE::Algorithm::analyzeText(x, config);
+        OSSE::database_result result = manager.database()->find(tags);
+        for(OSSE::database_object* page : result) {
             std::cout << "Found: " << page->title << ", at " << page->URI.fullURI() << std::endl;
         }
         std::cout << std::endl;
