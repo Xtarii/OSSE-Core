@@ -1,33 +1,58 @@
 #include "../../headers/database/Database.h"
+
+#include "../../headers/error/Error.h"
 #include <iostream>
+#include <mutex>
 
 using namespace OSSE;
 
-Database::~Database() {
+void abstract_database::add(database_object *obj) {
+    throw exception("DB_ADD(database_object*) not implemented.");
+}
+
+void abstract_database::remove(std::string URI) {
+    remove(URI::parse(URI, nullptr));
+}
+void abstract_database::remove(URI URI) {
+    throw exception("DB_REMOVE(URI) not implemented.");
+}
+
+database_result abstract_database::find(string_set tags) {
+    throw exception("DB_FIND(string_list) not implemented.");
+}
+
+abstract_database::~abstract_database() {
+    std::cout << "\t- DB_DELETE() Cleanup of database manager" << std::endl;
+}
+
+
+
+
+
+//
+// /-----------------------------/
+// DEFAULT DATABASE IMPLEMENTATION
+// /-----------------------------/
+//
+
+simple_database::~simple_database() {
     std::cout << "\t- Cleanup of database manager" << std::endl;
-    while(!database_p.empty()) {
-        object* obj = database_p.back();
-        database_p.pop_back();
+    while(!db_.empty()) {
+        database_object* obj = db_.back();
+        db_.pop_back();
         delete obj;
     }
 }
 
-void Database::add(object* obj) {
-    std::unique_lock<std::mutex> lock(mutex_p);
-    database_p.push_back(obj);
+void simple_database::add(database_object* obj) {
+    std::unique_lock<std::mutex> lock(mutex_);
+    db_.push_back(obj);
 }
 
-void Database::remove(std::string URI) {
-    std::unique_lock<std::mutex> lock(mutex_p);
-    std::cout << "\nShould remove Object from list...\n" << std::endl;
-}
-
-
-
-std::set<Database::object*> Database::get(std::set<std::string> tags) {
-    std::unique_lock<std::mutex> lock(mutex_p);
-    std::set<object*> list;
-    for(object* obj : database_p) {
+database_result simple_database::find(string_set tags) {
+    std::unique_lock<std::mutex> lock(mutex_);
+    database_result result;
+    for(database_object* obj : db_) {
         for(std::string tag : tags) {
             if(std::find(
                 obj->tags.begin(),
@@ -35,9 +60,9 @@ std::set<Database::object*> Database::get(std::set<std::string> tags) {
                 tag
             ) != obj->tags.end()
             ) {
-                list.emplace(obj);
+                result.emplace(obj);
             }
         }
     }
-    return list;
+    return result;
 }

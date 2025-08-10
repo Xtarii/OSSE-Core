@@ -2,6 +2,7 @@
 #define OSSE_DATABASE
 
 #include "../URI/URI.h"
+#include "../types/Types.h"
 
 #include <mutex>
 #include <set>
@@ -10,77 +11,121 @@
 
 namespace OSSE {
     /**
-     * Simple Database structure
+     * Database objects
+     *
+     * The objects stored in the database.
      */
-    struct Database {
+    struct database_object {
         /**
-         * Database object
+         * Document URI
          */
-        struct object {
+        OSSE::URI URI;
+
+        /**
+         * Document Title
+         */
+        std::string title;
+
+        /**
+         * Document description
+         */
+        std::string description;
+
+        /**
+         * Document Tags
+         */
+        std::set<std::string> tags;
+    };
+
+
+
+    /**
+     * Basic Database Manager Structure
+     *
+     * A structure representing the functions
+     * a `manager` is expected to call when
+     * managing the data in a database.
+     */
+    struct abstract_database {
+        protected:
             /**
-             * Document URI
+             * Database Mutex for thread safety function calls
              */
-            OSSE::URI URI;
+            std::mutex mutex_;
+
+
+
+        public:
+            /**
+             * Adds object to database
+             *
+             * @param obj Object to add
+             */
+            virtual void add(database_object* obj);
 
             /**
-             * Document Title
+             * Removes object from database
+             *
+             * Uses URI to find and remove the object
+             * from the database.
+             *
+             * @param URI URI of the object to remove
              */
-            std::string title;
+            virtual void remove(std::string URI);
 
             /**
-             * Document description
+             * Removes object from database
+             *
+             * Uses URI to find and remove the object
+             * from the database.
+             *
+             * @param URI URI of the object to remove
              */
-            std::string description;
+            virtual void remove(OSSE::URI URI);
+
+
 
             /**
-             * Document Tags
+             * Finds list of `documents` that matches the
+             * provided `tags`
+             *
+             * @param tags Tags to search for when looking for documents
+             * @return List of Documents matching the `tags`
              */
-            std::set<std::string> tags;
-        };
+            virtual OSSE::database_result find(OSSE::string_set tags);
 
 
 
-        /**
-         * Database
-         */
-        std::vector<object*> database_p;
-
-        /**
-         * Mutex object
-         */
-        std::mutex mutex_p;
+            virtual ~abstract_database();
+    };
 
 
 
-        /**
-         * Adds object to database
-         *
-         * @param obj Object to add
-         */
-        void add(object* obj);
-        /**
-         * Removes object with URI from database
-         *
-         * @param URI URI
-         */
-        void remove(std::string URI);
+    /**
+     * Simple but slow database implementation
+     *
+     * Recommended to replace this with custom
+     * database implementation. This database
+     * serves as a simple example implementation.
+     *
+     * `USE THIS DATABASE ON YOUR OWN EXPENSE` as
+     * this database is really slow and runs local.
+     */
+    struct simple_database : abstract_database {
+        private:
+            /**
+             * Database
+             */
+            std::vector<database_object*> db_;
 
 
 
-        /**
-         * Gets list of documents that matches the
-         * `tags` parameter
-         *
-         * @param tags List of tags to search for
-         * @return The resulting documents
-         */
-        std::set<object*> get(std::set<std::string> tags);
+        public:
+            void add(database_object *obj) override;
 
+            OSSE::database_result find(OSSE::string_set tags) override;
 
-
-
-
-        ~Database();
+            ~simple_database() override;
     };
 }
 
