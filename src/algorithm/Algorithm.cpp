@@ -1,8 +1,10 @@
 #include "../../headers/algorithm/Algorithm.h"
 #include "../../headers/core.h"
 
-std::set<std::string> OSSE::Algorithm::analyzeText(std::string text, CONFIG_LIST &config) {
-    std::set<std::string> result;
+using namespace OSSE;
+
+string_set Algorithm::analyzeText(std::string text, string_list &config) {
+    string_set result;
 
     for(std::string tag : config) {
         std::string a = OSSE::toLower(text);
@@ -15,9 +17,9 @@ std::set<std::string> OSSE::Algorithm::analyzeText(std::string text, CONFIG_LIST
 
 
 
-std::set<std::string> OSSE::Algorithm::analyzeDocument(OSSE::HTML::Document *document, CONFIG_LIST &config) {
-    std::set<std::string> result;
-    std::set<std::string> current;
+string_set Algorithm::analyzeDocument(HTML::Document *document, string_list &config) {
+    string_set result;
+    string_set current;
 
     current = analyzeText(document->title(), config);
     result.insert(current.begin(), current.end());
