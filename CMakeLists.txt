@@ -16,6 +16,7 @@ add_library(osse SHARED src/core.cpp
     src/robots/Robots.cpp
     src/queue/Queue.cpp
     src/database/Database.cpp
+    src/error/Error.cpp
 
     # Crawlers
     src/crawler/Manager.cpp
@@ -81,7 +82,7 @@ configure_package_config_file(
 )
 write_basic_package_version_file(
     ${CMAKE_CURRENT_BINARY_DIR}/OSSEConfigVersion.cmake
-    VERSION 1.0.0
+    VERSION 0.2
     COMPATIBILITY AnyNewerVersion
 )
 
