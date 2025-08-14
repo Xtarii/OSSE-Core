@@ -98,35 +98,6 @@ namespace OSSE {
 
             virtual ~abstract_database();
     };
-
-
-
-    /**
-     * Simple but slow database implementation
-     *
-     * Recommended to replace this with custom
-     * database implementation. This database
-     * serves as a simple example implementation.
-     *
-     * `USE THIS DATABASE ON YOUR OWN EXPENSE` as
-     * this database is really slow and runs local.
-     */
-    struct simple_database : abstract_database {
-        private:
-            /**
-             * Database
-             */
-            std::vector<database_object*> db_;
-
-
-
-        public:
-            void add(database_object *obj) override;
-
-            OSSE::database_result find(OSSE::string_set tags) override;
-
-            ~simple_database() override;
-    };
 }
 
 #endif // OSSE_DATABASE
