@@ -8,6 +8,7 @@
 #include "../database/Database.h"
 #include "worker/Worker.h"
 #include <memory>
+#include <mutex>
 #include <vector>
 
 namespace OSSE {
@@ -18,6 +19,18 @@ namespace OSSE {
      */
     struct Manager {
         private:
+            /**
+             * Manager mutex
+             */
+            std::mutex mutex_;
+
+            /**
+             * Currently active worker threads
+             */
+            int active_;
+
+
+
             /**
              * OSSE Configuration
              */
@@ -121,6 +134,24 @@ namespace OSSE {
              * @return Database Manager
              */
             OSSE::abstract_database* database();
+
+
+            /**
+             * Subscribe work to manager
+             */
+            void subscribe();
+            /**
+             * Unsubscribe work from manager
+             */
+            void unsubscribe();
+
+            /**
+             * Gets the status of the work the
+             * manager is currently doing.
+             *
+             * @return Manager work status
+             */
+            bool isDone();
 
 
 

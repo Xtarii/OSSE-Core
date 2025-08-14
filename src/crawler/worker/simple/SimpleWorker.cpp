@@ -4,6 +4,7 @@
 #include "../../../../headers/HTML/HTML.h"
 #include "../../../../headers/crawler/Manager.h"
 #include "../../../../headers/algorithm/Algorithm.h"
+#include <thread>
 
 using namespace OSSE;
 using namespace OSSE::Simple;
@@ -13,17 +14,28 @@ worker::worker(Manager *manager) : OSSE::abstract_worker(manager) {
 
 
 
-void worker::run(std::shared_ptr<uri_object> obj) {
-    std::string res = OSSE::GET(obj->URI);
+void worker::run(std::shared_ptr<uri_object> object) {
+    std::thread thread([this, object]() {
+        this->manager_->subscribe();
+        this->crawl(object);
+        this->manager_->unsubscribe();
+    });
+    thread.detach();
+}
+
+
+
+void worker::crawl(std::shared_ptr<OSSE::uri_object> object) {
+    std::string res = OSSE::GET(object->URI);
     HTML::Document document(res);
 
     for(std::string link : document.links()) {
         if(URI::validURI(link, manager_->config())) {
             manager_->push(URI::parse(link, manager_->config()));
-        }else if(obj->Robots->isAllowed(link)) {
+        }else if(object->Robots->isAllowed(link)) {
             manager_->push(new uri_object(
-                URI::parse(obj->URI.asPath(link), nullptr),
-                obj->Robots
+                URI::parse(object->URI.asPath(link), nullptr),
+                object->Robots
             ));
         }
     }
@@ -37,11 +49,11 @@ void worker::run(std::shared_ptr<uri_object> obj) {
     );
 
     // Adds document to SQL Database
-    database_object db_obj{
-        obj->URI,
+    database_object obj{
+        object->URI,
         document.title(),
         document.meta()["description"],
         tags
     };
-    manager_->database()->add(new database_object(db_obj));
+    manager_->database()->add(new database_object(obj));
 }

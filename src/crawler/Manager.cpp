@@ -26,6 +26,8 @@ Manager::~Manager() {
     std::cout << "\nRemoves manager..." << std::endl;
     std::chrono::time_point start = std::chrono::steady_clock::now();
 
+    std::cout << "\t- Awaits active workers to finnish" << std::endl;
+    while(!isDone());
 
     delete config_;
     while(!queue_.empty()) queue_.pop();
@@ -92,4 +94,19 @@ abstract_database* Manager::database() {
 
 CONFIG_LIST& Manager::tags() {
     return tags_;
+}
+
+
+
+void Manager::subscribe() {
+    std::unique_lock<std::mutex> lock(mutex_);
+    active_++;
+}
+void Manager::unsubscribe() {
+    std::unique_lock<std::mutex> lock(mutex_);
+    active_--;
+}
+
+bool Manager::isDone() {
+    return active_ <= 0;
 }

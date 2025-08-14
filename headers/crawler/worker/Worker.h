@@ -47,6 +47,16 @@ namespace OSSE {
              * @param object Data object
              */
             virtual void run(std::shared_ptr<OSSE::uri_object> object);
+
+            /**
+             * Crawls on object target
+             *
+             * When the method `run` is called it
+             * calls this method.
+             *
+             * @param object Target object
+             */
+            virtual void crawl(std::shared_ptr<OSSE::uri_object> object);
     };
 }
 

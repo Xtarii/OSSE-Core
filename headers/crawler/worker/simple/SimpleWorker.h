@@ -24,6 +24,8 @@ namespace OSSE::Simple {
 
 
             void run(std::shared_ptr<OSSE::uri_object> object) override;
+
+            void crawl(std::shared_ptr<OSSE::uri_object> object) override;
     };
 }
 
