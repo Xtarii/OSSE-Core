@@ -15,7 +15,10 @@ add_library(osse SHARED src/core.cpp
     src/URI/URI.cpp
     src/robots/Robots.cpp
     src/queue/Queue.cpp
+
     src/database/Database.cpp
+    src/database/simple/SimpleDatabase.cpp
+
     src/error/Error.cpp
 
     # Crawlers
