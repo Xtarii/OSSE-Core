@@ -24,6 +24,15 @@
  */
 namespace OSSE {
 
+    /**
+     * Simple Implementations Namespace
+     *
+     * Namespace for objects with simple
+     * implementations of OSSE components.
+     */
+    namespace Simple {}
+
+
 
     std::string GET(URI &uri);
 

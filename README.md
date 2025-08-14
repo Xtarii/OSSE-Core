@@ -64,19 +64,19 @@ Examples of how to use `OSSE`
 When creating a manager ( an object that controls workers ), a database
 is needed as a place where the workers can store the data.
 
-It is **NOT RECOMMENDED** to use `simple_database` due to the
-slow speed. But if one wants to use `simple_database` one can
+It is **NOT RECOMMENDED** to use `Simple::database` due to the
+slow speed. But if one wants to use `Simple::database` one can
 set the managers database as follows,
 ```cpp
 OSSE::Manager manager(tags, nullptr);
-manager.setDatabase(new OSSE::simple_database());
+manager.setDatabase(new OSSE::Simple::database());
 ```
 
 The recommended way to use databases is to **override** the functions in
-`abstract_database` and connect to a database of ones liking such as MongoDB,
+`Simple::database` and connect to a database of ones liking such as MongoDB,
 Supabase or anything else,
 ```cpp
-struct my_db : OSSE::abstract_database {
+struct my_db : OSSE::Simple::database {
     /* Custom implementation */
 }
 
@@ -85,7 +85,7 @@ struct my_db : OSSE::abstract_database {
 manager.setDatabase(new my_db());
 ```
 
-The functions that should be **overwritten** from `abstract_database` is as follows
+The functions that should be **overwritten** from `Simple::database` is as follows
 - add(database_object* obj) &rarr; **void**
 - remove(std::string URI) &rarr; **void**
 - remove(OSSE::URI URI) &rarr; **void**
