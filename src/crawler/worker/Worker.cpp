@@ -1,49 +1,12 @@
 #include "../../../headers/crawler/worker/Worker.h"
-
-#include "../../../headers/core.h"
-#include "../../../headers/HTML/HTML.h"
-#include "../../../headers/algorithm/Algorithm.h"
-
-#include <set>
-#include <string>
+#include "../../../headers/error/Error.h"
 
 using namespace OSSE;
 
-Worker::Worker(Manager *manager) {
+abstract_worker::abstract_worker(Manager *manager) {
     manager_ = manager;
 }
 
-
-
-void Worker::run(Manager::QueueObject *object) {
-    std::string res = OSSE::GET(object->URI);
-    HTML::Document document(res);
-
-    for(std::string link : document.links()) {
-        if(URI::validURI(link, manager_->config())) {
-            manager_->push(URI::parse(link, manager_->config()));
-        }else if(object->Robots->isAllowed(link)) {
-            manager_->push(new Manager::QueueObject(
-                URI::parse(object->URI.asPath(link), nullptr),
-                object->Robots
-            ));
-        }
-    }
-
-
-
-    // Analyzes document for tags
-    std::set<std::string> tags = Algorithm::analyzeDocument(
-        &document,
-        manager_->tags()
-    );
-
-    // Adds document to SQL Database
-    database_object obj{
-        object->URI,
-        document.title(),
-        document.meta()["description"],
-        tags
-    };
-    manager_->database()->add(new database_object(obj));
+void abstract_worker::run(std::shared_ptr<uri_object> obj) {
+    throw exception("WORKER_RUN(shared_ptr<uri_object>) not implemented.");
 }

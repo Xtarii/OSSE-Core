@@ -24,6 +24,7 @@ add_library(osse SHARED src/core.cpp
     # Crawlers
     src/crawler/Manager.cpp
     src/crawler/worker/Worker.cpp
+    src/crawler/worker/simple/SimpleWorker.cpp
 
     # Algorithms
     src/algorithm/Algorithm.cpp
