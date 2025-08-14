@@ -1,5 +1,7 @@
 #include "../headers/crawler/Manager.h"
 #include "../headers/algorithm/Algorithm.h"
+#include "../headers/database/simple/SimpleDatabase.h"
+
 #include <iostream>
 #include <string>
 
@@ -13,7 +15,7 @@ int main() {
     CONFIG_LIST config = OSSE::Config::loadConfigList("./.config/tags.list");
 
     OSSE::Manager manager(config, nullptr);
-    manager.setDatabase(new OSSE::simple_database());
+    manager.setDatabase(new OSSE::Simple::database());
     manager.push(URI);
 
     manager.createWorkers(5);
