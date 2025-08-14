@@ -1,11 +1,12 @@
 #include "../../headers/crawler/Manager.h"
 
+#include "../../headers/crawler/worker/simple/SimpleWorker.h"
+
 #include "../../headers/crawler/worker/Worker.h"
 #include "../../headers/error/Error.h"
 
 #include <chrono>
 #include <iostream>
-#include <thread>
 
 using namespace OSSE;
 
@@ -27,9 +28,9 @@ Manager::~Manager() {
 
 
     delete config_;
-    while(!queue_.empty()) delete queue_.pop();
+    while(!queue_.empty()) queue_.pop();
     while(!workers_.empty()) {
-        OSSE::Worker* worker = workers_.back();
+        OSSE::abstract_worker* worker = workers_.back();
         workers_.pop_back();
         delete worker;
     }
@@ -48,40 +49,32 @@ Manager::~Manager() {
 
 void Manager::push(URI URI) {
     Robots* robots = Robots::load(&URI, config_);
-    push(new QueueObject(URI, robots));
+    push(new uri_object(URI, robots));
 }
 
-void Manager::push(Manager::QueueObject *object) {
-    queue_.push(object);
+void Manager::push(uri_object *object) {
+    std::shared_ptr<uri_object> ptr = std::shared_ptr<uri_object>(object);
+    queue_.push(ptr);
 }
 
 
 
 void Manager::createWorkers(int amount) {
     while(!workers_.empty()) {
-        OSSE::Worker* worker = workers_.back();
+        OSSE::abstract_worker* worker = workers_.back();
         workers_.pop_back();
         delete worker;
     }
 
     for(int x = 0; x < amount; x++)
-        workers_.push_back(new OSSE::Worker(this));
+        workers_.push_back(new OSSE::Simple::worker(this));
 }
 
 void Manager::run() {
     if(database_ == nullptr) throw exception("MANAGER_RUN() No Database");
 
-    std::vector<std::thread> threads;
-    for(OSSE::Worker* worker : workers_) {
-        threads.emplace_back([this, worker](){
-            QueueObject* obj = this->queue_.pop();
-            if(obj) worker->run(obj);
-            delete obj;
-        });
-    }
-
-    for(std::thread &thread : threads) if(thread.joinable()) {
-        thread.join();
+    for(OSSE::abstract_worker* worker : workers_) {
+        if(!queue_.empty()) worker->run(queue_.pop());
     }
 }
 

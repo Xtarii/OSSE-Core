@@ -6,6 +6,8 @@
 #include "../URI/URI.h"
 #include "../robots/Robots.h"
 #include "../database/Database.h"
+#include "worker/Worker.h"
+#include <memory>
 #include <vector>
 
 namespace OSSE {
@@ -15,30 +17,6 @@ namespace OSSE {
      * Manager for managing Crawlers
      */
     struct Manager {
-        /// Manager URI Queue object
-        struct QueueObject {
-            /// URI Object
-            OSSE::URI URI;
-            /// Robots Object
-            OSSE::Robots* Robots;
-
-            /**
-             * Construct a new Queue object
-             *
-             * @param uri URI object
-             * @param robots Robots object
-             */
-            QueueObject(OSSE::URI uri, OSSE::Robots* robots) : URI(uri), Robots(robots) {
-                OSSE::Robots::subscribe(this->Robots);
-            }
-
-            ~QueueObject() {
-                OSSE::Robots::unsubscribe(this->Robots);
-            }
-        };
-
-
-
         private:
             /**
              * OSSE Configuration
@@ -54,12 +32,12 @@ namespace OSSE {
              *
              * A queue of the `URI's` to scan
              */
-            OSSE::Queue<QueueObject*> queue_;
+            OSSE::Queue<std::shared_ptr<uri_object>> queue_;
 
             /**
              * List of workers that this manager manages
              */
-            std::vector<Worker*> workers_;
+            std::vector<abstract_worker*> workers_;
 
             /**
              * Database
@@ -117,7 +95,7 @@ namespace OSSE {
              *
              * @param object Queue object
              */
-            void push(QueueObject *object);
+            void push(uri_object *object);
 
 
 
