@@ -146,6 +146,13 @@ namespace OSSE {
             void unsubscribe();
 
             /**
+             * Get the Active Count
+             *
+             * @return Active workers count
+             */
+            int getActive();
+
+            /**
              * Gets the status of the work the
              * manager is currently doing.
              *

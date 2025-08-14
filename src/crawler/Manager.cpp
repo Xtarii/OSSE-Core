@@ -27,7 +27,10 @@ Manager::~Manager() {
     std::chrono::time_point start = std::chrono::steady_clock::now();
 
     std::cout << "\t- Awaits active workers to finnish" << std::endl;
-    while(!isDone());
+    while(!isDone()) {
+        std::cout << "\r\t\t: " << getActive() << " workers left";
+    }
+    std::cout << std::endl;
 
     delete config_;
     while(!queue_.empty()) queue_.pop();
@@ -105,6 +108,11 @@ void Manager::subscribe() {
 void Manager::unsubscribe() {
     std::unique_lock<std::mutex> lock(mutex_);
     active_--;
+}
+
+int Manager::getActive() {
+    std::unique_lock<std::mutex> lock(mutex_);
+    return active_;
 }
 
 bool Manager::isDone() {
