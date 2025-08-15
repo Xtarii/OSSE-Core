@@ -31,12 +31,18 @@ void worker::crawl(std::shared_ptr<OSSE::uri_object> object) {
 
     for(std::string link : document.links()) {
         if(URI::validURI(link, manager_->config())) {
-            manager_->push(URI::parse(link, manager_->config()));
+            URI uri = URI::parse(link, manager_->config());
+            manager_->push(new uri_object(
+                uri,
+                Robots::load(&uri, manager_->config())
+            ));
         }else if(object->Robots->isAllowed(link)) {
+
             manager_->push(new uri_object(
                 URI::parse(object->URI.asPath(link), nullptr),
                 object->Robots
             ));
+
         }
     }
 

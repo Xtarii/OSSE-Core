@@ -7,6 +7,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <thread>
 
 using namespace OSSE;
 
@@ -16,6 +17,7 @@ Manager::Manager(CONFIG_LIST tags, std::string config)
 Manager::Manager(CONFIG_LIST tags, Config *config) {
     config_ = config;
     tags_ = tags;
+    active_ = 0;
 
     database_ = nullptr;
 }
@@ -27,8 +29,10 @@ Manager::~Manager() {
     std::chrono::time_point start = std::chrono::steady_clock::now();
 
     std::cout << "\t- Awaits active workers to finnish" << std::endl;
+    int sleep = 100; // Thread sleep to avoid thread racing
     while(!isDone()) {
-        std::cout << "\r\t\t: " << getActive() << " workers left";
+        std::cout << "\r\t\t: " << getActive() << " worker(s) left\r";
+        std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
     }
     std::cout << std::endl;
 
