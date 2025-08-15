@@ -33,7 +33,10 @@ std::string OSSE::GET(OSSE::URI &uri) {
 
     res = curl_easy_perform(curl);
     if(res != CURLE_OK)
-        std::cerr << "curl_easy_perform() failed " << curl_easy_strerror(res) << std::endl;
+        std::cerr << "curl_easy_perform() failed at "
+            << uri.fullURI() << " with "
+            << curl_easy_strerror(res)
+            << std::endl;
 
     curl_easy_cleanup(curl);
     curl_global_cleanup();
