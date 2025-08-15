@@ -25,7 +25,7 @@ namespace OSSE {
              *
              * Used to parse Robots files.
              */
-            struct RobotsBlock {
+            struct block {
                 /**
                  * Agents that this rule applies to
                  */
@@ -58,7 +58,7 @@ namespace OSSE {
             /**
              * Amount of handlers connected to this robots file
              */
-            int handlers_;
+            unsigned int handlers_;
 
 
 
@@ -78,7 +78,7 @@ namespace OSSE {
              * @param config OSSE Configuration
              * @return Robots Block object
              */
-            static RobotsBlock parseBlock(std::istringstream *stream, OSSE::Config *config);
+            static block parseBlock(std::istringstream *stream, OSSE::Config *config);
 
 
 

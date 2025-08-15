@@ -27,7 +27,7 @@ namespace OSSE {
             /**
              * Currently active worker threads
              */
-            int active_;
+            unsigned int active_;
 
 
 
@@ -150,7 +150,7 @@ namespace OSSE {
              *
              * @return Active workers count
              */
-            int getActive();
+            unsigned int getActive();
 
             /**
              * Gets the status of the work the

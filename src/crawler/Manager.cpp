@@ -107,10 +107,10 @@ void Manager::subscribe() {
 }
 void Manager::unsubscribe() {
     std::unique_lock<std::mutex> lock(mutex_);
-    active_--;
+    if(active_ > 0) active_--;
 }
 
-int Manager::getActive() {
+unsigned int Manager::getActive() {
     std::unique_lock<std::mutex> lock(mutex_);
     return active_;
 }
