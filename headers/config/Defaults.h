@@ -35,7 +35,8 @@ const OSSE_CONFIG_TYPE ROBOTS_PATH {"ROBOTS_PATH", "/robots.txt"};
 
 /// Default URI Parsing regex
 const OSSE_CONFIG_TYPE URI_PARSE {
-    "URI_PARSE", R"((?:(\w+)://)?([^/:?#]+)(?::(\d+))?([^?#]*)?(\?[^#]*)?(#.*)?)"
+    "URI_PARSE",
+    R"((?:(\w+)://)?((?:[A-Za-z0-9-]+\.)+[A-Za-z]{2,})(?::(\d+))?([^?#]*)?(\?[^#]*)?(#.*)?)"
 };
 
 /// Default Agent
