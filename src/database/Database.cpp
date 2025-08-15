@@ -1,43 +1,25 @@
 #include "../../headers/database/Database.h"
+
+#include "../../headers/error/Error.h"
 #include <iostream>
 
 using namespace OSSE;
 
-Database::~Database() {
-    std::cout << "\t- Cleanup of database manager" << std::endl;
-    while(!database_p.empty()) {
-        object* obj = database_p.back();
-        database_p.pop_back();
-        delete obj;
-    }
+void abstract_database::add(database_object *obj) {
+    throw exception("DB_ADD(database_object*) not implemented.");
 }
 
-void Database::add(object* obj) {
-    std::unique_lock<std::mutex> lock(mutex_p);
-    database_p.push_back(obj);
+void abstract_database::remove(std::string URI) {
+    remove(URI::parse(URI, nullptr));
+}
+void abstract_database::remove(URI URI) {
+    throw exception("DB_REMOVE(URI) not implemented.");
 }
 
-void Database::remove(std::string URI) {
-    std::unique_lock<std::mutex> lock(mutex_p);
-    std::cout << "\nShould remove Object from list...\n" << std::endl;
+database_result abstract_database::find(string_set tags) {
+    throw exception("DB_FIND(string_list) not implemented.");
 }
 
-
-
-std::set<Database::object*> Database::get(std::set<std::string> tags) {
-    std::unique_lock<std::mutex> lock(mutex_p);
-    std::set<object*> list;
-    for(object* obj : database_p) {
-        for(std::string tag : tags) {
-            if(std::find(
-                obj->tags.begin(),
-                obj->tags.end(),
-                tag
-            ) != obj->tags.end()
-            ) {
-                list.emplace(obj);
-            }
-        }
-    }
-    return list;
+abstract_database::~abstract_database() {
+    std::cout << "\t- DB_DELETE() Cleanup of database manager" << std::endl;
 }

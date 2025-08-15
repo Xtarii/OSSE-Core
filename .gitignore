@@ -1,3 +1,6 @@
+# DEBUG and Build output
+build/
+
 # CMake
 CMakeFiles/
 cmake_install.cmake

@@ -1,24 +1,31 @@
 #ifndef OSSE_CRAWL_WORKER
 #define OSSE_CRAWL_WORKER
 
-#include "../Manager.h"
+#include "../../types/Types.h"
+#include <memory>
 
 namespace OSSE {
+    struct Manager;
+
     /**
-     * Web Worker
+     * Abstract Worker Structure
      *
-     * A Crawler that crawls the internet
-     * to map out `pages` and `websites`.
+     * Override this structure when
+     * making a custom worker for
+     * the `OSSE Manager`
+     *
+     * An abstract crawler used for
+     * making crawlers to map the internet.
      *
      * Workers work under a `Manager`
      */
-    struct Worker {
-        private:
+    struct abstract_worker {
+        protected:
             /**
-             * Worker manager
+             * Manager pointer
              *
-             * The manager that manages this
-             * worker.
+             * A pointer to the manager
+             * of this worker object.
              */
             OSSE::Manager *manager_;
 
@@ -26,20 +33,30 @@ namespace OSSE {
 
         public:
             /**
-             * Construct a new Worker object
+             * Construct a new abstract worker object
              *
              * @param manager Worker Manager
              */
-            Worker(OSSE::Manager *manager);
+            abstract_worker(OSSE::Manager *manager);
 
 
 
             /**
              * Runs Worker
              *
-             * @param object Manager queue object
+             * @param object Data object
              */
-            void run(OSSE::Manager::QueueObject *object);
+            virtual void run(std::shared_ptr<OSSE::uri_object> object);
+
+            /**
+             * Crawls on object target
+             *
+             * When the method `run` is called it
+             * calls this method.
+             *
+             * @param object Target object
+             */
+            virtual void crawl(std::shared_ptr<OSSE::uri_object> object);
     };
 }
 

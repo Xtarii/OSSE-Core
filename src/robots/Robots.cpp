@@ -26,7 +26,7 @@ Robots* Robots::parse(std::string &content, Config *config) {
 
     std::istringstream stream(content);
     std::string line;
-    RobotsBlock block;
+    block block;
 
     block = parseBlock(&stream, config);
     if(!block.agents.empty()) {
@@ -53,8 +53,8 @@ Robots* Robots::parse(std::string &content, Config *config) {
 
 
 
-Robots::RobotsBlock Robots::parseBlock(std::istringstream *stream, Config *config) {
-    RobotsBlock block;
+Robots::block Robots::parseBlock(std::istringstream *stream, Config *config) {
+    block block;
 
     std::regex regex = Config::getRegex(config, ROBOTS_PARSE);
     std::regex end = Config::getRegex(config, ROBOTS_PARSE_BLOCK_END);
@@ -138,6 +138,6 @@ void Robots::subscribe(Robots *robots) {
 
 void Robots::unsubscribe(Robots *robots) {
     std::unique_lock<std::mutex> lock(robots->mutex_);
-    robots->handlers_--;
+    if(robots->handlers_ > 0) robots->handlers_--;
     if(robots->handlers_ <= 0) delete robots;
 }

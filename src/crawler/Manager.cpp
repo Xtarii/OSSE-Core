@@ -1,5 +1,10 @@
 #include "../../headers/crawler/Manager.h"
+
+#include "../../headers/crawler/worker/simple/SimpleWorker.h"
+
 #include "../../headers/crawler/worker/Worker.h"
+#include "../../headers/error/Error.h"
+
 #include <chrono>
 #include <iostream>
 #include <thread>
@@ -12,8 +17,9 @@ Manager::Manager(CONFIG_LIST tags, std::string config)
 Manager::Manager(CONFIG_LIST tags, Config *config) {
     config_ = config;
     tags_ = tags;
+    active_ = 0;
 
-    database_ = new Database();
+    database_ = nullptr;
 }
 
 
@@ -22,11 +28,18 @@ Manager::~Manager() {
     std::cout << "\nRemoves manager..." << std::endl;
     std::chrono::time_point start = std::chrono::steady_clock::now();
 
+    std::cout << "\t- Awaits active workers to finnish" << std::endl;
+    int sleep = 100; // Thread sleep to avoid thread racing
+    while(!isDone()) {
+        std::cout << "\r\t\t: " << getActive() << " worker(s) left\r";
+        std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
+    }
+    std::cout << std::endl;
 
     delete config_;
-    while(!queue_.empty()) delete queue_.pop();
+    while(!queue_.empty()) queue_.pop();
     while(!workers_.empty()) {
-        OSSE::Worker* worker = workers_.back();
+        OSSE::abstract_worker* worker = workers_.back();
         workers_.pop_back();
         delete worker;
     }
@@ -45,38 +58,32 @@ Manager::~Manager() {
 
 void Manager::push(URI URI) {
     Robots* robots = Robots::load(&URI, config_);
-    push(new QueueObject(URI, robots));
+    push(new uri_object(URI, robots));
 }
 
-void Manager::push(Manager::QueueObject *object) {
-    queue_.push(object);
+void Manager::push(uri_object *object) {
+    std::shared_ptr<uri_object> ptr = std::shared_ptr<uri_object>(object);
+    queue_.push(ptr);
 }
 
 
 
 void Manager::createWorkers(int amount) {
     while(!workers_.empty()) {
-        OSSE::Worker* worker = workers_.back();
+        OSSE::abstract_worker* worker = workers_.back();
         workers_.pop_back();
         delete worker;
     }
 
     for(int x = 0; x < amount; x++)
-        workers_.push_back(new OSSE::Worker(this));
+        workers_.push_back(new OSSE::Simple::worker(this));
 }
 
 void Manager::run() {
-    std::vector<std::thread> threads;
-    for(OSSE::Worker* worker : workers_) {
-        threads.emplace_back([this, worker](){
-            QueueObject* obj = this->queue_.pop();
-            if(obj) worker->run(obj);
-            delete obj;
-        });
-    }
+    if(database_ == nullptr) throw exception("MANAGER_RUN() No Database");
 
-    for(std::thread &thread : threads) if(thread.joinable()) {
-        thread.join();
+    for(OSSE::abstract_worker* worker : workers_) {
+        if(!queue_.empty()) worker->run(queue_.pop());
     }
 }
 
@@ -88,10 +95,30 @@ Config* Manager::config() const {
     return config_;
 }
 
-Database* Manager::database() {
+abstract_database* Manager::database() {
     return database_;
 }
 
 CONFIG_LIST& Manager::tags() {
     return tags_;
+}
+
+
+
+void Manager::subscribe() {
+    std::unique_lock<std::mutex> lock(mutex_);
+    active_++;
+}
+void Manager::unsubscribe() {
+    std::unique_lock<std::mutex> lock(mutex_);
+    if(active_ > 0) active_--;
+}
+
+unsigned int Manager::getActive() {
+    std::unique_lock<std::mutex> lock(mutex_);
+    return active_;
+}
+
+bool Manager::isDone() {
+    return active_ <= 0;
 }

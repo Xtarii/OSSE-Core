@@ -57,6 +57,44 @@ target_link_libraries(<target> OSSE::osse)
 
 # How to use
 
+Examples of how to use `OSSE`
+
+### Managers
+
+When creating a manager ( an object that controls workers ), a database
+is needed as a place where the workers can store the data.
+
+It is **NOT RECOMMENDED** to use `Simple::database` due to the
+slow speed. But if one wants to use `Simple::database` one can
+set the managers database as follows,
+```cpp
+OSSE::Manager manager(tags, nullptr);
+manager.setDatabase(new OSSE::Simple::database());
+```
+
+The recommended way to use databases is to **override** the functions in
+`Simple::database` and connect to a database of ones liking such as MongoDB,
+Supabase or anything else,
+```cpp
+struct my_db : OSSE::Simple::database {
+    /* Custom implementation */
+}
+
+...
+
+manager.setDatabase(new my_db());
+```
+
+The functions that should be **overwritten** from `Simple::database` is as follows
+- add(database_object* obj) &rarr; **void**
+- remove(std::string URI) &rarr; **void**
+- remove(OSSE::URI URI) &rarr; **void**
+- find(OSSE::string_set tags) &rarr; **OSSE::database_result**
+
+
+
+### Config and Robots
+
 **OSSE** uses configuration files to customize the engine.
 It is possible to use it without configuration files.
 ```cpp

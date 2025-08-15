@@ -6,6 +6,9 @@
 #include "../URI/URI.h"
 #include "../robots/Robots.h"
 #include "../database/Database.h"
+#include "worker/Worker.h"
+#include <memory>
+#include <mutex>
 #include <vector>
 
 namespace OSSE {
@@ -15,31 +18,19 @@ namespace OSSE {
      * Manager for managing Crawlers
      */
     struct Manager {
-        /// Manager URI Queue object
-        struct QueueObject {
-            /// URI Object
-            OSSE::URI URI;
-            /// Robots Object
-            OSSE::Robots* Robots;
+        private:
+            /**
+             * Manager mutex
+             */
+            std::mutex mutex_;
 
             /**
-             * Construct a new Queue object
-             *
-             * @param uri URI object
-             * @param robots Robots object
+             * Currently active worker threads
              */
-            QueueObject(OSSE::URI uri, OSSE::Robots* robots) : URI(uri), Robots(robots) {
-                OSSE::Robots::subscribe(this->Robots);
-            }
-
-            ~QueueObject() {
-                OSSE::Robots::unsubscribe(this->Robots);
-            }
-        };
+            unsigned int active_;
 
 
 
-        private:
             /**
              * OSSE Configuration
              */
@@ -47,24 +38,24 @@ namespace OSSE {
             /**
              * List of tags
              */
-            CONFIG_LIST tags_;
+            OSSE::string_list tags_;
 
             /**
              * URI Queue
              *
              * A queue of the `URI's` to scan
              */
-            OSSE::Queue<QueueObject*> queue_;
+            OSSE::Queue<std::shared_ptr<uri_object>> queue_;
 
             /**
              * List of workers that this manager manages
              */
-            std::vector<Worker*> workers_;
+            std::vector<abstract_worker*> workers_;
 
             /**
              * Database
              */
-            OSSE::Database* database_;
+            OSSE::abstract_database* database_;
 
 
 
@@ -117,7 +108,7 @@ namespace OSSE {
              *
              * @param object Queue object
              */
-            void push(QueueObject *object);
+            void push(uri_object *object);
 
 
 
@@ -128,12 +119,48 @@ namespace OSSE {
              */
             OSSE::Config* config() const;
 
+
+
+            /**
+             * Set the Database object
+             *
+             * @param database Database object
+             */
+            void setDatabase(abstract_database* database) { database_ = database; }
+
             /**
              * Gets Manager Database Manager
              *
              * @return Database Manager
              */
-            OSSE::Database* database();
+            OSSE::abstract_database* database();
+
+
+            /**
+             * Subscribe work to manager
+             */
+            void subscribe();
+            /**
+             * Unsubscribe work from manager
+             */
+            void unsubscribe();
+
+            /**
+             * Get the Active Count
+             *
+             * @return Active workers count
+             */
+            unsigned int getActive();
+
+            /**
+             * Gets the status of the work the
+             * manager is currently doing.
+             *
+             * @return Manager work status
+             */
+            bool isDone();
+
+
 
             /**
              * Gets Manager tags list
