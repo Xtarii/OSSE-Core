@@ -1,4 +1,7 @@
 #include "../../../headers/database/simple/SimpleDatabase.h"
+
+#include "../../../headers/colors/colors.h"
+
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -7,7 +10,8 @@ using namespace OSSE;
 using namespace OSSE::Simple;
 
 database::~database() {
-    std::cout << "\t- Cleanup of database manager" << std::endl;
+    std::cout << colors::BLUE << "\t- Cleanup of database manager"
+        << colors::DEFAULT << std::endl;
     while(!db_.empty()) {
         database_object* obj = db_.back();
         db_.pop_back();

@@ -4,6 +4,7 @@
 
 #include "../../headers/crawler/worker/Worker.h"
 #include "../../headers/error/Error.h"
+#include "../../headers/colors/colors.h"
 
 #include <chrono>
 #include <iostream>
@@ -25,16 +26,22 @@ Manager::Manager(CONFIG_LIST tags, Config *config) {
 
 
 Manager::~Manager() {
-    std::cout << "\nRemoves manager..." << std::endl;
+    std::cout << colors::RED << "\nRemoves manager..." << colors::DEFAULT << std::endl;
     std::chrono::time_point start = std::chrono::steady_clock::now();
 
-    std::cout << "\t- Awaits active workers to finnish" << std::endl;
+
+
+    std::cout << colors::BLUE << "\t- Awaits active workers to finnish"
+        << colors::DEFAULT << std::endl;
     int sleep = 100; // Thread sleep to avoid thread racing
     while(!isDone()) {
-        std::cout << "\r\t\t: " << getActive() << " worker(s) left\r";
+        std::cout << colors::BLUE << "\r\t\t: "
+            << colors::YELLOW << getActive() << colors::BLUE << " worker(s) left\r";
         std::this_thread::sleep_for(std::chrono::milliseconds(sleep));
     }
-    std::cout << std::endl;
+    std::cout << colors::DEFAULT << std::endl;
+
+
 
     delete config_;
     while(!queue_.empty()) queue_.pop();
@@ -49,7 +56,9 @@ Manager::~Manager() {
     std::chrono::time_point end = std::chrono::steady_clock::now();
     double delta = std::chrono::duration_cast<std::chrono::milliseconds>(
         end - start).count();
-    std::cout << "Deleted manager in " << delta << "ms\n" << std::endl;
+    std::cout << colors::RED << "Deleted manager in "
+        << colors::YELLOW << delta << "ms\n"
+        << colors::DEFAULT << std::endl;
 }
 
 

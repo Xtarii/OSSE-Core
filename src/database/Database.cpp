@@ -1,6 +1,8 @@
 #include "../../headers/database/Database.h"
 
 #include "../../headers/error/Error.h"
+#include "../../headers/colors/colors.h"
+
 #include <iostream>
 
 using namespace OSSE;
@@ -21,5 +23,6 @@ database_result abstract_database::find(string_set tags) {
 }
 
 abstract_database::~abstract_database() {
-    std::cout << "\t- DB_DELETE() Cleanup of database manager" << std::endl;
+    std::cout << colors::BLUE << "\t- DB_DELETE() Cleanup of database manager"
+        << colors::DEFAULT << std::endl;
 }
