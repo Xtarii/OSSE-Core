@@ -1,6 +1,7 @@
 #include "../headers/crawler/Manager.h"
 #include "../headers/algorithm/Algorithm.h"
 #include "../headers/database/simple/SimpleDatabase.h"
+#include "../headers/colors/colors.h"
 
 #include <iostream>
 #include <string>
@@ -35,7 +36,10 @@ int main() {
         OSSE::string_set tags = OSSE::Algorithm::analyzeText(x, config);
         OSSE::database_result result = manager.database()->find(tags);
         for(OSSE::database_object* page : result) {
-            std::cout << "Found: " << page->title << ", at " << page->URI.fullURI() << std::endl;
+            std::cout << OSSE::colors::GREEN <<
+                "Found: " << OSSE::colors::BLUE <<
+                page->title << ", at " << page->URI.fullURI()
+                << OSSE::colors::DEFAULT << std::endl;
         }
         std::cout << std::endl;
     }
