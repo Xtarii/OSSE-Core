@@ -1,16 +1,21 @@
 #include "../../headers/config/Config.h"
 
+#include "../../headers/colors/colors.h"
+
 #include <fstream>
 #include <iostream>
 #include <string>
 
-OSSE::Config OSSE::Config::load(std::string path) {
+using namespace OSSE;
+
+Config Config::load(std::string path) {
     Config config;
     std::map<std::string, std::string> map;
 
     std::fstream stream(path.c_str());
     if(!stream.is_open()) {
-        std::cerr << "Could not open file " << path << std::endl;
+        std::cerr << colors::RED << "Could not open file "
+            << colors::YELLOW << path << colors::DEFAULT << std::endl;
         return config;
     }
 
@@ -24,16 +29,18 @@ OSSE::Config OSSE::Config::load(std::string path) {
 
     stream.close();
     config.settings = map;
-    std::cout << "Loaded config " << path << std::endl;
+    std::cout << colors::BLUE << "Loaded config "
+        << colors::YELLOW << path << colors::DEFAULT << std::endl;
     return config;
 }
 
-CONFIG_LIST OSSE::Config::loadConfigList(std::string path) {
+CONFIG_LIST Config::loadConfigList(std::string path) {
     CONFIG_LIST config;
 
     std::fstream stream(path.c_str());
     if(!stream.is_open()) {
-        std::cerr << "Could not open file " << path << std::endl;
+        std::cerr << colors::RED << "Could not open file "
+            << colors::YELLOW << path << colors::DEFAULT << std::endl;
         return config;
     }
 
@@ -43,7 +50,8 @@ CONFIG_LIST OSSE::Config::loadConfigList(std::string path) {
     }
 
     stream.close();
-    std::cout << "Loaded config " << path << std::endl;
+    std::cout << colors::BLUE << "Loaded config "
+        << colors::YELLOW << path << colors::DEFAULT << std::endl;
     return config;
 }
 
@@ -51,16 +59,16 @@ CONFIG_LIST OSSE::Config::loadConfigList(std::string path) {
 
 
 
-std::string OSSE::Config::operator[](std::string setting) {
+std::string Config::operator[](std::string setting) {
     return settings[setting];
 }
-std::string OSSE::Config::operator[](const char* setting) {
+std::string Config::operator[](const char* setting) {
     return settings[setting];
 }
 
 
 
-std::regex OSSE::Config::getRegexSettings(
+std::regex Config::getRegexSettings(
     std::string setting,
     std::regex_constants::syntax_option_type flag
 ) {
@@ -68,7 +76,7 @@ std::regex OSSE::Config::getRegexSettings(
     return regex;
 }
 
-std::regex OSSE::Config::getRegexSettings(std::string setting) {
+std::regex Config::getRegexSettings(std::string setting) {
     return getRegexSettings(setting, std::regex::icase);
 }
 
@@ -76,7 +84,7 @@ std::regex OSSE::Config::getRegexSettings(std::string setting) {
 
 
 
-std::string OSSE::Config::getValue(Config *config, const OSSE_CONFIG_TYPE &settings) {
+std::string Config::getValue(Config *config, const OSSE_CONFIG_TYPE &settings) {
     if(config == nullptr) return settings.value;
 
     std::string value = ((Config)*config)[settings.name];
@@ -84,7 +92,7 @@ std::string OSSE::Config::getValue(Config *config, const OSSE_CONFIG_TYPE &setti
     return value;
 }
 
-std::regex OSSE::Config::getRegex(
+std::regex Config::getRegex(
     Config *config,
     const OSSE_CONFIG_TYPE &settings,
     std::regex_constants::syntax_option_type flag

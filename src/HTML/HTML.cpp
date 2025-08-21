@@ -1,5 +1,7 @@
 #include "../../headers/HTML/HTML.h"
 
+#include "../../headers/core.h"
+
 #include <exception>
 #include <iostream>
 #include <libxml/parser.h>
@@ -60,7 +62,7 @@ void OSSE::HTML::Document::loadMetas() {
         xmlChar* name = xmlGetProp(node, BAD_CAST "name");
         xmlChar* content = xmlGetProp(node, BAD_CAST "content");
 
-        meta_[(const char*)name] = (const char*)content;
+        meta_[OSSE::toLower((const char*)name)] = (const char*)content;
 
         xmlFree(name);
         xmlFree(content);
