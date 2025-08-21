@@ -21,6 +21,13 @@ namespace OSSE::Simple {
              */
             std::vector<database_object*> db_;
 
+            /**
+             * Tag map
+             *
+             * A map for fast searching in the database.
+             */
+            std::map<std::string, std::vector<database_object*>> tag_m;
+
 
 
         public:
