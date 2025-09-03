@@ -1,5 +1,6 @@
 # DEBUG and Build output
 build/
+.cache/
 
 # CMake
 CMakeFiles/
