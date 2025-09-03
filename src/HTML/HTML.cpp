@@ -1,6 +1,7 @@
 #include "../../headers/HTML/HTML.h"
 
 #include "../../headers/core.h"
+#include "types/Types.h"
 
 #include <exception>
 #include <iostream>
@@ -8,7 +9,10 @@
 #include <libxml/xpath.h>
 #include <libxml/xmlstring.h>
 
-OSSE::HTML::Document::Document(std::string html) {
+using namespace OSSE;
+using namespace OSSE::HTML;
+
+Document::Document(std::string html) {
     doc_ = htmlReadMemory(
         html.c_str(), html.length(),
         nullptr, nullptr,
@@ -26,7 +30,7 @@ OSSE::HTML::Document::Document(std::string html) {
 
 
 
-OSSE::HTML::Document::~Document() {
+Document::~Document() {
     xmlXPathFreeContext(ctx_);
     xmlFreeDoc(doc_);
     xmlCleanupParser();
@@ -36,13 +40,13 @@ OSSE::HTML::Document::~Document() {
 
 
 
-void OSSE::HTML::Document::load() {
+void Document::load() {
     loadTitle();
     loadMetas();
     loadLinks();
 }
 
-void OSSE::HTML::Document::loadTitle() {
+void Document::loadTitle() {
     xmlXPathObjectPtr ptr = xmlXPathEvalExpression(BAD_CAST "//title", ctx_);
     if(ptr && ptr->nodesetval->nodeNr > 0) {
         xmlNode *node = ptr->nodesetval->nodeTab[0];
@@ -54,7 +58,7 @@ void OSSE::HTML::Document::loadTitle() {
     xmlXPathFreeObject(ptr);
 }
 
-void OSSE::HTML::Document::loadMetas() {
+void Document::loadMetas() {
     xmlXPathObjectPtr ptr = xmlXPathEvalExpression(
         BAD_CAST "//meta[@name and @content]", ctx_);
     for(int i = 0; i < ptr->nodesetval->nodeNr; i++) {
@@ -70,7 +74,7 @@ void OSSE::HTML::Document::loadMetas() {
     xmlXPathFreeObject(ptr);
 }
 
-void OSSE::HTML::Document::loadLinks() {
+void Document::loadLinks() {
     xmlXPathObjectPtr ptr = xmlXPathEvalExpression(BAD_CAST "//a[@href]", ctx_);
     for(int i = 0; i < ptr->nodesetval->nodeNr; i++) {
         xmlNode *node = ptr->nodesetval->nodeTab[i];
@@ -87,15 +91,15 @@ void OSSE::HTML::Document::loadLinks() {
 
 
 
-std::string OSSE::HTML::Document::title() const {
+std::string Document::title() const {
     return title_;
 }
 
-std::map<std::string, std::string> OSSE::HTML::Document::meta() const {
+string_map Document::meta() const {
     return meta_;
 }
 
-std::vector<std::string> OSSE::HTML::Document::links() const {
+string_list Document::links() const {
     return links_;
 }
 
@@ -103,6 +107,6 @@ std::vector<std::string> OSSE::HTML::Document::links() const {
 
 
 
-std::string OSSE::HTML::Document::operator[](std::string meta) {
+std::string Document::operator[](std::string meta) {
     return meta_[meta];
 }

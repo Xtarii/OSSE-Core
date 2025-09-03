@@ -1,11 +1,10 @@
 #ifndef OSSE_HTML
 #define OSSE_HTML
 
+#include "types/Types.h"
 #include <libxml/HTMLparser.h>
 #include <libxml/xpath.h>
-#include <map>
 #include <string>
-#include <vector>
 
 /**
  * OSSE HTML Namespace
@@ -32,11 +31,11 @@ namespace OSSE::HTML {
             /**
              * Document Meta Data
              */
-            std::map<std::string, std::string> meta_;
+            OSSE::string_map meta_;
             /**
              * Document Links
              */
-            std::vector<std::string> links_;
+            OSSE::string_list links_;
 
 
 
@@ -75,7 +74,7 @@ namespace OSSE::HTML {
              *
              * @return Meta Data
              */
-            std::map<std::string, std::string> meta() const;
+            OSSE::string_map meta() const;
 
             /**
              * Document Meta
@@ -90,7 +89,7 @@ namespace OSSE::HTML {
              *
              * @return List of links
              */
-            std::vector<std::string> links() const;
+            OSSE::string_list links() const;
 
             /**
              * Document Title

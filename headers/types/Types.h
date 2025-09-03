@@ -4,6 +4,7 @@
 #include "../URI/URI.h"
 #include "../robots/Robots.h"
 
+#include <map>
 #include <set>
 #include <string>
 #include <vector>
@@ -44,6 +45,10 @@ namespace OSSE {
      * A set of strings
      */
     typedef std::set<std::string> string_set;
+    /**
+     * A map of strings
+     */
+    typedef std::map<std::string, std::string> string_map;
 
     /**
      * Database Result Object
