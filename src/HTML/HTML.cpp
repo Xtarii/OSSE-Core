@@ -1,7 +1,7 @@
 #include "../../headers/HTML/HTML.h"
 
 #include "../../headers/core.h"
-#include "types/Types.h"
+#include "../../headers/types/Types.h"
 
 #include <exception>
 #include <iostream>

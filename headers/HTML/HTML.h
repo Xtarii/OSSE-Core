@@ -1,7 +1,7 @@
 #ifndef OSSE_HTML
 #define OSSE_HTML
 
-#include "types/Types.h"
+#include "../types/Types.h"
 #include <libxml/HTMLparser.h>
 #include <libxml/xpath.h>
 #include <string>
